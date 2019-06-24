@@ -1,4 +1,5 @@
 # yfpo
+<<<<<<< HEAD
 
 > A vue.js project of yfpo
 
@@ -28,3 +29,6 @@ npm test
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+=======
+模具管理系统
+>>>>>>> 6d8125922e7735c98ebf82868e92ca8c4cc28331
