@@ -39,6 +39,7 @@
           let params = {
             accountName: this.accountName,
             pwd: this.pwd,
+            type: 1,
           };
           try {
             let res = await login(params);
