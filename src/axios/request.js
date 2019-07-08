@@ -121,6 +121,8 @@ $ajax.interceptors.response.use(
         // 返回错误信息 return response.data;
     } else if(response.data.status === 0){
       Message({showClose: true, type: 'warning', message: response.data.msg});
+    } else if(response.data.status === -2){
+      Message({showClose: true, type: 'warning', message: response.data.msg});
     } else if(response.status !== 200){
       Message({showClose: true, type: 'warning', message: response.data.msg});
     }

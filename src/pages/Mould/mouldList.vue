@@ -5,7 +5,7 @@
 
     <AddOrEdit v-if="show === 1" @ifChange="showDefault"></AddOrEdit>
 
-    <detailAddOrEdit v-else-if="show === 2" @ifChange="showDefault" @detailListEditTable="addBreadcrumb"></detailAddOrEdit>
+    <detailAddOrEdit v-else-if="show === 2" @ifChange="showDefault" @detailListEditTable="addBreadcrumb" :showNo="showNo"></detailAddOrEdit>
 
     <el-row v-else-if="show === 0">
       <el-col :span="20" :offset="2">
@@ -58,17 +58,17 @@
 
               <el-table-column fixed="right" label="项目详情" width="100" align="center">
                 <template slot-scope="scope">
-              <span>
-                <el-button class="underline f12" @click="addOrEdit(scope.row)" type="text" align="center">编辑</el-button>
-              </span>
+                  <span>
+                    <el-button class="underline f12" @click="addOrEdit(scope.row)" type="text" align="center">编辑</el-button>
+                  </span>
                 </template>
               </el-table-column>
 
               <el-table-column fixed="right" label="注塑模具试模验收认可清单" width="180" align="center">
                 <template slot-scope="scope">
-              <span>
-                <el-button class="underline f12" @click="edits(scope.row)" type="text" align="center">编辑</el-button>
-              </span>
+                  <span>
+                    <el-button class="underline f12" @click="edits(scope.row)" type="text" align="center">编辑</el-button>
+                  </span>
                 </template>
               </el-table-column>
             </el-table>
@@ -198,9 +198,18 @@
             this.$nextTick(function () {
               this.show = 2;
             });
+            this.showNo = 0;
             this.breadcrumb = this.breadcrumb.slice(0,3);
+          } else if (val === '2-1') {
+            this.show = -1;
+            this.$nextTick(function () {
+              this.show = 2;
+            });
+            this.showNo = 1;
+            this.breadcrumb = this.breadcrumb.slice(0,4);
           } else {
             this.show = 0;
+            this.showNo = 0;
             this.breadcrumb = this.breadcrumb.slice(0,2);
             this.getList();
           }
@@ -220,12 +229,12 @@
           { prop: 'projectName', label: '项目名称', width: 'unset'},
           { prop: 'mouldNo', label: '模具编号',},
 
-          { prop: 'createTime', label: '创建时间',},
           { prop: 'partName', label: '零件名称', width: 'unset'},
           { prop: 'leader', label: '项目负责人',},
           { prop: 'vehicleType', label: '车型名称',},
           { prop: 'mainEngineFactory', label: '主机厂',},
           { prop: 'supplier', label: '模具供应商',},
+          { prop: 'createTime', label: '创建时间',},
         ],
 
         // search
@@ -240,7 +249,10 @@
         breadcrumb: [
           { id: 'mould', name: '试模验收认可清单管理', path: '/mould',},
           { id: 'mouldList', name: '模具列表', path: '/mould/mouldList', thing: 'showDefault'},
-        ]
+        ],
+
+        // detailListEdit SHOW NO
+        showNo: 0,
       }
     },
   }

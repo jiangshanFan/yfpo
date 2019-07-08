@@ -1,5 +1,5 @@
 <template>
-  <div class="mould">
+  <div class="mould" style="padding-top:40px;">
     <transition name="slide-fade">
       <router-view></router-view>
     </transition>

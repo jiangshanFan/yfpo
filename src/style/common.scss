@@ -56,7 +56,8 @@ $width: 100% !default;
 .tc{text-align:center;}
 
 /*宽度width*/
-.w100{width:100px !important;}
+.w100{width:100% !important;}
+.h100{height:100% !important;}
 
 /*下划线_*/
 .underline{text-decoration: underline !important;}
@@ -184,6 +185,16 @@ html,body {
               position: absolute;
               left: 0;
             }
+          }
+          .breadcrumbList {
+            position: fixed;
+            z-index: 1000;
+            top: 80px;
+            left: 0;
+            width: calc(100% - 60px);
+            box-shadow: 0px 2px 5px 0px rgba(137, 137, 137, 0.35);
+            margin-left: 60px;
+            box-sizing: border-box;
           }
         }
       }

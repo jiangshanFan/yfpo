@@ -109,7 +109,7 @@
     -moz-osx-font-smoothing: grayscale;
     text-align: left;
     color: #2c3e50;
-    min-width:1280px;
+    /*min-width:1280px;*/
     overflow:auto;
   }
 </style>

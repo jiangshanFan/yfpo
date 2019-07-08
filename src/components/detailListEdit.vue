@@ -23,7 +23,7 @@
       </el-col>
     </el-row>
 
-    <Edit v-else-if="detailListEdit_show === 1" @changed="showDefault" :tabs="tabs"></Edit>
+    <Edit v-else-if="detailListEdit_show === 1" @changed="showDefault" @bread="bread"></Edit>
     <Tool v-else-if="detailListEdit_show === 2" @changed="showDefault"></Tool>
   </div>
 </template>
@@ -50,10 +50,17 @@
         default: function() {
           return true;
         }
-      }
+      },
+      showNo: {
+        type: Number,
+        default: function() {
+          return 0;
+        }
+      },
     },
     created() {
       this.getList();
+      this.detailListEdit_show = this.showNo;
     },
 
     methods: {
@@ -107,6 +114,7 @@
       edits(scope, obj={id: 'detailListEditTable', name: 'TOOL INFORMATION'}) {
         if (scope.$index) {
           this.detailListEdit_show = 1;
+          obj.thing = '2-1';
           obj.name = scope.row.largeClass;
           let index;
           if (scope.$index === 1) {
@@ -116,12 +124,18 @@
           }
 
           this.tabs = this.detailList[index];
+          this.$store.dispatch('tabs', this.tabs);
           console.log(this.tabs);
           this.$emit('detailListEditTable', obj);
         } else {
           this.detailListEdit_show = 2;
           this.$emit('detailListEditTable', obj);
         }
+      },
+
+      // change the breadCrumb
+      bread(obj) {
+        this.$emit('detailListEditTable', obj);
       },
 
       // download Excel

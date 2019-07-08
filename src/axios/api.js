@@ -36,6 +36,10 @@ export const getApproveInfoByMouldNo = data => {return $ajax({url: '/api/project
 export const updateApproveInfoByCustomer = data => {return $ajax({url: '/api/project/updateApproveInfoByCustomer', method: 'post', data: data, meta: 1, })};
 //内部用户更新认可清单信息
 export const updateApproveInfoByInnerUser = data => {return $ajax({url: '/api/project/updateApproveInfoByInnerUser', method: 'post', data: data, meta: 1, })};
+//详情列表
+export const getCheckDetailList = data => {return $ajax({url: '/api/project/getCheckDetailList', method: 'get', params: data,})};
+//客户更新认可清单信息
+export const addCheckDetail = data => {return $ajax({url: '/api/project/addCheckDetail', method: 'post', data: data, meta: 1, })};
 
 
 //获取tool information
