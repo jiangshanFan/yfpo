@@ -46,7 +46,7 @@
           <!-- content -->
           <div class="mt20">
             <!-- 添加 -->
-            <el-button type="primary" size="mini" @click="addOrEdit()">新增</el-button>
+            <el-button type="primary" size="mini" @click="addOrEdit()" v-if="$store.getters.userLoginVO.role !== 2">新增</el-button>
 
             <!-- 表格数据 -->
             <el-table :data="table.content" stripe border size="small" style="width: 100%;margin-top:10px;" header-cell-class-name="header_cell table_header_shadow" tooltip-effect="light">
@@ -56,7 +56,7 @@
               <!-- circle -->
               <column :header="header"></column>
 
-              <el-table-column fixed="right" label="项目详情" width="100" align="center">
+              <el-table-column fixed="right" label="项目详情" width="100" align="center" v-if="$store.getters.userLoginVO.role !== 2">
                 <template slot-scope="scope">
                   <span>
                     <el-button class="underline f12" @click="addOrEdit(scope.row)" type="text" align="center">编辑</el-button>
