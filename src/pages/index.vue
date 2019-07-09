@@ -66,13 +66,9 @@
     if (resizeTimer) clearTimeout(resizeTimer);
     resizeTimer = setTimeout(function(){
       // if (window.innerWidth > 720) {
-      //   let b = document.getElementsByTagName('body');
-      //   console.log(b)
-      //   b[0].style.backgroundColor = 'red'
+      //   window.location.href = 'http://10.9.1.77:65379'
       // } else {
-      //   let b = document.getElementsByTagName('body');
-      //   console.log(b)
-      //   b[0].style.backgroundColor = '#fff'
+      //   window.location.href = 'http://10.9.1.77:65380'
       // }
       setMainHeight();
     } , 100);
