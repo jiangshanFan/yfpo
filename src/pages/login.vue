@@ -51,7 +51,6 @@
               this.$store.dispatch('token', sessionStorage.getItem('token'));
               this.$store.dispatch('accountName', sessionStorage.getItem('accountName'));
               this.$store.dispatch('userLoginVO', JSON.parse(sessionStorage.getItem('userLoginVO')));
-              console.log(this.$store.getters.userLoginVO);
 
               if(!this.$store.state.Auth.permissionList) {
                 this.$store.dispatch('Auth/FETCH_PERMISSION').then(() => {  // 此处的then写法在旧版IE不支持

@@ -35,7 +35,7 @@
       window.addEventListener("beforeunload",()=>{
         function replacer(key, value) {
           // Filtering out properties
-          if (key === 'Auth' || key === 'userLoginVO') {
+          if (key === 'Auth') {
             return undefined;
           }
           return value;
