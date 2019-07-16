@@ -52,7 +52,7 @@
       //   this.$store.dispatch('Auth/FETCH_PERMISSION'); //刷新界面就请求权限数据
       // }
 
-      console.log(this.$router.options)
+      // console.log(this.$router.options)
     },
 
     mounted() {
@@ -77,7 +77,7 @@
 
     watch: { //通过路由的更新可以直接赋值
       $route: function(to, from , next) {
-        console.log(this.$route);
+        // console.log(this.$route);
       },
     },
 

@@ -11,8 +11,44 @@
         <!--  main content  -->
         <div class="mainContent mt20">
           <el-form ref="detailListEdit_tool" :rules="rules" :model="form" label-width="100px" size="small" label-position="left" :disabled="this.$store.getters.userLoginVO.role !== 1">
-            <el-row class="flex_column_center" :gutter="40">
-              <el-col :span="12">
+            <el-row class="flex_row_spaceAround mt40" :gutter="40">
+              <el-row>
+                <el-form-item label="车型名称" prop="vehicleType">
+                  <el-input clearable v-model="form.vehicleType"></el-input>
+                </el-form-item>
+
+                <el-form-item label="浇口点数" prop="gatePoints">
+                  <el-input clearable v-model="form.gatePoints"></el-input>
+                </el-form-item>
+
+                <el-form-item label="油压控制段数" prop="oilPressureControlQuantity">
+                  <el-input clearable v-model="form.oilPressureControlQuantity"></el-input>
+                </el-form-item>
+              </el-row>
+
+              <el-row>
+                <el-form-item label="主机厂" prop="mainEngineFactory">
+                  <el-input clearable v-model="form.mainEngineFactory"></el-input>
+                </el-form-item>
+
+                <el-form-item label="型腔数" prop="cavity">
+                  <el-input clearable v-model="form.cavity"></el-input>
+                </el-form-item>
+              </el-row>
+
+              <el-row>
+                <el-form-item label="供应商" prop="supplier">
+                  <el-input clearable v-model="form.supplier"></el-input>
+                </el-form-item>
+
+                <el-form-item label="注塑机型号" prop="injectionMoldingMachineModel">
+                  <el-input clearable v-model="form.injectionMoldingMachineModel"></el-input>
+                </el-form-item>
+              </el-row>
+            </el-row>
+
+            <el-row class="flex_column_center mt40" :gutter="40">
+              <el-col class="ovwh" :span="12">
                 <img src="../assets/tool_information.png" alt="产品图" style="max-height: 360px;" />
               </el-col>
               <el-col :span="12">

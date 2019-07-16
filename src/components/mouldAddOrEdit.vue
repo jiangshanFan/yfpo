@@ -31,27 +31,43 @@
               </el-form-item>
             </el-col>
 
-            <el-col :span="12">
-              <el-form-item label="项目负责人：" prop="leader">
-                <el-input style="width:100%;" v-model="basicInfo.leader" clearable></el-input>
+            <el-col :span="12" v-if="!Object.keys($store.getters.mould_list).length">
+              <el-form-item label="项目工程师：" prop="projectEngineer">
+                <el-select v-model="basicInfo.projectEngineer" value-key="userId" placeholder="请选择">
+                  <el-option v-for="item in options.role1" :key="item.userId" :label="item.name" :value="item"></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
 
-            <el-col :span="12">
-              <el-form-item label="车型名称：" prop="vehicleType">
-                <el-input style="width:100%;" v-model="basicInfo.vehicleType" clearable></el-input>
+            <el-col :span="12" v-if="!Object.keys($store.getters.mould_list).length">
+              <el-form-item label="设计工程师：" prop="designEngineer">
+                <el-select v-model="basicInfo.designEngineer" value-key="userId" placeholder="请选择">
+                  <el-option v-for="item in options.role1" :key="item.userId" :label="item.name" :value="item"></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
 
-            <el-col :span="12">
-              <el-form-item label="主机厂：" prop="mainEngineFactory">
-                <el-input style="width:100%;" v-model="basicInfo.mainEngineFactory" clearable></el-input>
+            <el-col :span="12" v-if="!Object.keys($store.getters.mould_list).length">
+              <el-form-item label="质量经理：" prop="qualityManager">
+                <el-select v-model="basicInfo.qualityManager" value-key="userId" placeholder="请选择">
+                  <el-option v-for="item in options.role1" :key="item.userId" :label="item.name" :value="item"></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
 
-            <el-col :span="12">
-              <el-form-item label="模具供应商：" prop="supplier">
-                <el-input style="width:100%;" v-model="basicInfo.supplier" clearable></el-input>
+            <el-col :span="12" v-if="!Object.keys($store.getters.mould_list).length">
+              <el-form-item label="YFPO TC：" prop="yfpoTc">
+                <el-select v-model="basicInfo.yfpoTc" value-key="userId" placeholder="请选择">
+                  <el-option v-for="item in options.role2" :key="item.userId" :label="item.name" :value="item"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="12" v-if="!Object.keys($store.getters.mould_list).length">
+              <el-form-item label="YFPO 工厂：" prop="yfpoFactory">
+                <el-select v-model="basicInfo.yfpoFactory" value-key="userId" placeholder="请选择">
+                  <el-option v-for="item in options.role2" :key="item.userId" :label="item.name" :value="item"></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -74,11 +90,20 @@
 /* eslint-disable */
 import { Message, MessageBox, Loading } from 'element-ui';
 /** 导入api.js */
-import { insertMould, updateMould, } from '../axios/api.js'
+import { insertMould, updateMould, getUserListByRole} from '../axios/api.js'
   export default {
     name: "ProjectAddOrEdit",
-    created() {
+    async created() {
       this.basicInfo = Object.assign({},this.$store.getters.mould_list);
+
+      let res1 = await getUserListByRole({role: 1});
+      let res2 = await getUserListByRole({role: 2});
+      if (res1.status === 1) {
+        this.options.role1 = [...res1.msg];
+      }
+      if (res2.status === 1) {
+        this.options.role2 = [...res2.msg];
+      }
     },
     mounted() {
       if (!this.basicInfo.projectName) {
@@ -132,7 +157,8 @@ import { insertMould, updateMould, } from '../axios/api.js'
         loading: false, //下拉列表请求后提示加载中
 
         options: {
-
+          role1: [],
+          role2: [],
         },
 
 

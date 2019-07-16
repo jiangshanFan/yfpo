@@ -24,7 +24,6 @@
     </el-row>
 
     <Edit v-else-if="detailListEdit_show === 1" @changed="showDefault" @bread="bread"></Edit>
-    <Tool v-else-if="detailListEdit_show === 2" @changed="showDefault"></Tool>
   </div>
 </template>
 
@@ -35,14 +34,12 @@
   import { getApproveStatistics, } from '../axios/api.js'
   import column from './tableColumn'
   import Edit from './detailListEdit_Edit'
-  import Tool from './detailListEdit_tool'
 
   export default {
     name: "detailListEdit",
     components: {
       'column': column,
       'Edit': Edit,
-      'Tool': Tool,
     },
     props: {
       show: {
@@ -76,18 +73,16 @@
         if(res.status === 1) {
           this.table.content = [...res.msg.slice(0,2), ...res.msg.slice(3)];
           this.loading = false;
-          this.table.content = [{largeClass: 'TOOL IMFORMATION'}, ...this.table.content, ];
+          // this.table.content = [{largeClass: 'TOOL IMFORMATION'}, ...this.table.content, ];
         }
       },
 
       // merge cells
       arraySpanMethod({ row, column, rowIndex, columnIndex }) {
         if (columnIndex === 1 || column.label === "操作") {
-          if (rowIndex % 3 === 0 && rowIndex !== 0) {
+          if ((rowIndex - 2) % 3 === 0 && rowIndex > 1) {
             return [3,1]
           } else if (rowIndex === 0) {
-            return [1,1]
-          } else if (rowIndex === 1) {
             return [2,1]
           } else {
             return [0,0]
@@ -112,25 +107,19 @@
       // },
 
       edits(scope, obj={id: 'detailListEditTable', name: 'TOOL INFORMATION'}) {
+        let index;
+        this.detailListEdit_show = 1;
+        obj.name = scope.row.largeClass;
+        obj.thing = '2-1';
         if (scope.$index) {
-          this.detailListEdit_show = 1;
-          obj.thing = '2-1';
-          obj.name = scope.row.largeClass;
-          let index;
-          if (scope.$index === 1) {
-            index = 0;
-          } else {
-            index = scope.$index / 3;  // 耦合度太高，考虑其他参数代替
-          }
-
-          this.tabs = this.detailList[index];
-          this.$store.dispatch('tabs', this.tabs);
-          console.log(this.tabs);
-          this.$emit('detailListEditTable', obj);
+          index = (scope.$index + 1) / 3;  // 耦合度太高，考虑其他参数代替
         } else {
-          this.detailListEdit_show = 2;
-          this.$emit('detailListEditTable', obj);
+          index = 0;
         }
+        this.tabs = this.detailList[index];
+        this.$store.dispatch('tabs', this.tabs);
+        console.log(this.tabs);
+        this.$emit('detailListEditTable', obj);
       },
 
       // change the breadCrumb

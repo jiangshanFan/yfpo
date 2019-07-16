@@ -1,5 +1,5 @@
 <template>
-  <div class="detailListEdit_Edit_detail">
+  <div class="detailListEdit_Edit_detail" style="width:80%;margin:auto;">
     <div class="title mb20">
       <span><b>检查内容：</b></span>
       <p v-html="allInfo.checkContent"></p>
@@ -10,15 +10,21 @@
       <el-collapse v-model="activeNames" @change="handleChange">
         <el-collapse-item v-for="(item, index) in list" :key="index" :name="index">
           <template slot="title">
-            <span class="mr20"><b>{{item.role === 1? 'Basis': '延峰彼欧'}}</b></span>
-            <span class="mr20"><b>{{item.name}}</b></span>
-            <span class="mr20"><b>{{item.createTime}}</b></span>
+            <p style="border-bottom: 1px solid #ccc;">
+              <span class="mr20"><b>{{item.role === 1? 'Basis': '延峰彼欧'}}</b></span>
+              <span class="mr20 c3">{{item.name}}</span>
+              <span class="mr20 cc f12"><b>{{item.createTime}}</b></span>
+            </p>
           </template>
-          <el-row class="pl20 pr20">
-            <p>{{item.remark}}</p>
-            <el-col class="ovwh" :span="6" v-for="(img,ind) in item.imageUrl" :key="ind">
-              <img class="w100" :src="img" alt="图片" />
-            </el-col>
+          <el-row class="w100 ovwh pl20 pr20">
+            <p class="w100 underline word_break">{{item.remark}}</p>
+            <el-row :gutter="20" v-if="item.imageUrl.length !== 0">
+              <el-col class="ovwh mt20" style="height:240px;" :span="6" v-for="(img,ind) in item.imageUrl" :key="ind">
+                <p class="border">
+                  <img class="w100" :src="img" alt="图片" />
+                </p>
+              </el-col>
+            </el-row>
           </el-row>
         </el-collapse-item>
       </el-collapse>
@@ -31,6 +37,7 @@
         type="textarea"
         :autosize="{ minRows: 3}"
         placeholder="请输入内容"
+        resize="none"
         v-model="remark">
       </el-input>
 
@@ -85,12 +92,14 @@ export default {
           //图片
           this.list.forEach(item => {
             let imgeUrl = item.imageUrl;
-            if(imgeUrl !== undefined && imgeUrl !== null) {
+            if(imgeUrl !== undefined && imgeUrl !== null && imgeUrl) {
               if(imgeUrl.length > 1 && imgeUrl.charAt(imgeUrl.length - 1) === '|') { /** 需要先判断imgeUrl ！== null，才能获取length */
               item.imageUrl = imgeUrl.substr(0,imgeUrl.length - 1).split('|');
               }else {
                 item.imageUrl = imgeUrl.split('|');
               }
+            } else {
+              item.imageUrl = [];
             }
           });
         }
@@ -151,11 +160,16 @@ export default {
       imageUrl: '',
       fileList: [],
       uploadData: {path: 'detail_pc'}, //上传时需要传递的额外参数
+      imgUrl: '',
     }
   },
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+  .flex_row_spaceBetween {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
 </style>

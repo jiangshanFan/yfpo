@@ -7,6 +7,10 @@
 
     <detailAddOrEdit v-else-if="show === 2" @ifChange="showDefault" @detailListEditTable="addBreadcrumb" :showNo="showNo"></detailAddOrEdit>
 
+    <Tool v-else-if="show === 3" @ifChange="showDefault"></Tool>
+
+    <designList v-else-if="show === 4" @ifChange="showDefault" @designListTable="addBreadcrumb" :showNo="showNo"></designList>
+
     <el-row v-else-if="show === 0">
       <el-col :span="20" :offset="2">
         <div class="mouldLists pl20 pr20">
@@ -54,20 +58,20 @@
               <el-table-column fixed type="index" width="60" label="序号" align="center" :index="(index) => this.$indexS(index, currentPage, size)"></el-table-column>
 
               <!-- circle -->
-              <column :header="header"></column>
+              <column :header="header" @edits="addOrEdit" @changeStatus="changeStatus"></column>
 
-              <el-table-column fixed="right" label="项目详情" width="100" align="center" v-if="$store.getters.userLoginVO.role !== 2">
+              <el-table-column fixed="right" label="设计评审清单" width="100" align="center">
                 <template slot-scope="scope">
                   <span>
-                    <el-button class="underline f12" @click="addOrEdit(scope.row)" type="text" align="center">编辑</el-button>
+                    <el-button class="underline f12" @click="edits(scope.row, 4)" type="text" align="center">编辑</el-button>
                   </span>
                 </template>
               </el-table-column>
 
-              <el-table-column fixed="right" label="注塑模具试模验收认可清单" width="180" align="center">
+              <el-table-column fixed="right" label="试模验收认可清单" width="120" align="center">
                 <template slot-scope="scope">
                   <span>
-                    <el-button class="underline f12" @click="edits(scope.row)" type="text" align="center">编辑</el-button>
+                    <el-button class="underline f12" @click="edits(scope.row, 2)" type="text" align="center">编辑</el-button>
                   </span>
                 </template>
               </el-table-column>
@@ -84,7 +88,6 @@
         </div>
       </el-col>
     </el-row>
-
   </div>
 
 </template>
@@ -93,11 +96,13 @@
 /* eslint-disable */
   import { Message, MessageBox, Loading } from 'element-ui';
   /** 导入api.js */
-  import { getMouldList, } from '../../axios/api.js'
+  import { getMouldList, getUserListByRole, updateMould, } from '../../axios/api.js'
   import column from '../../components/tableColumn'
   import breadcrumbList from '../../components/breadcrumbList'
   import mouldAddOrEdit from '../../components/mouldAddOrEdit'
   import detailListEdit from '../../components/detailListEdit'
+  import Tool from '../../components/detailListEdit_tool'
+  import designList from '../../components/designList'
 
   export default {
     name: "mouldList",
@@ -106,9 +111,32 @@
       'AddOrEdit': mouldAddOrEdit,
       'detailAddOrEdit': detailListEdit,
       'column': column,
+      'Tool': Tool,
+      'designList': designList,
     },
-    created() {
+    async created() {
       this.getList();
+      let res1 = await getUserListByRole({role: 1});
+      let res2 = await getUserListByRole({role: 2});
+      if (res1.status === 1) {
+        this.options.role1 = [...res1.msg];
+      }
+      if (res2.status === 1) {
+        this.options.role2 = [...res2.msg];
+      }
+
+      this.header.forEach(item => {
+        if (item.selectOrSpan) {
+          if (item.key === 1) {
+            let role1 = this.options.role1;
+            item.selectOrSpan = role1.map(r => {r.label = r.name; r.id = r.userId; return r;});
+          } else if (item.key === 2) {
+            let role2 = this.options.role2;
+            item.selectOrSpan = role2.map(r => {r.label = r.name; r.id = r.userId; return r;});
+            // console.log(item.selectOrSpan)
+          }
+        }
+      })
     },
 
     methods: {
@@ -163,21 +191,44 @@
       //   });
       // },
 
-      addOrEdit(row) {
-        this.show = 1;
-        if (row) {
-          this.$store.dispatch('mould_list', row);
-          this.breadcrumb.push({id: 'edit', name: '编辑项目'});
+      // tap edit button
+      addOrEdit(obj) {
+        // console.log(obj);
+        if (obj) {
+          this.$store.dispatch('mould_list', obj.row);
+          if (obj.key === 1) {
+            this.show = 1;
+            this.breadcrumb.push({id: 'edit', name: '编辑项目'});
+          } else if (obj.key === 2) {
+            this.show = 3;
+            this.breadcrumb.push({id: 'editTool', name: 'TOOL INFORMATION'});
+          }
         } else {
+          this.show = 1;
           this.$store.dispatch('mould_list', {});
           this.breadcrumb.push({id: 'add', name: '新增项目'});
         }
       },
 
-      edits(row) {
-        this.show = 2;
+
+      // tap '试模验收清单'
+      edits(row, index) {
+        this.show = index;
         this.$store.dispatch('mould_list', row);
-        this.breadcrumb.push({id: 'detailListEdit', name: '编辑清单', thing: 2});
+        if (index === 2) {
+          this.breadcrumb.push({id: 'detailListEdit', name: '试模验收认可清单', thing: 2});
+        } else if (index === 4) {
+          this.breadcrumb.push({id: 'designList', name: '设计评审清单', thing: 4});
+        }
+      },
+
+      // change the value of select
+      async changeStatus(obj, prop) {
+        let res = await updateMould(obj);
+        if (res.status === 1) {
+          Message({showClose: true, type: 'success', message: '更新成功！'});
+          this.getList();
+        }
       },
 
       // download Excel
@@ -207,6 +258,21 @@
             });
             this.showNo = 1;
             this.breadcrumb = this.breadcrumb.slice(0,4);
+          } else if (val === 4) {
+            this.show = -1;
+            this.$nextTick(function () {
+              this.show = 4;
+            });
+            this.showNo = 0;
+            this.breadcrumb = this.breadcrumb.slice(0,3);
+          } else if (val === '4-1') {
+            this.show = -1;
+            this.$nextTick(function () {
+              this.show = 4;
+              this.showNo = 1;
+            });
+
+            this.breadcrumb = this.breadcrumb.slice(0,4);
           } else {
             this.show = 0;
             this.showNo = 0;
@@ -224,24 +290,31 @@
         currentPage: 1,
         size: 10,
 
+        // search
+        search: {},
+        options: {
+          role1: [],
+          role2: [],
+        },
+
         header: [
           { prop: 'customerName', label: '客户名称',},
           { prop: 'projectName', label: '项目名称', width: 'unset'},
           { prop: 'mouldNo', label: '模具编号',},
 
           { prop: 'partName', label: '零件名称', width: 'unset'},
-          { prop: 'leader', label: '项目负责人',},
-          { prop: 'vehicleType', label: '车型名称',},
-          { prop: 'mainEngineFactory', label: '主机厂',},
-          { prop: 'supplier', label: '模具供应商',},
+          { prop: 'status', label: '状态', select: [ { id: 0, label: '已暂停'}, { id: 1, label: '进行中'}, { id: -1, label: '已取消'}, { id: 2, label: '已走模'},], disabled: true, width: 120,},
+          { prop: 'projectEngineer', label: '项目工程师', selectOrSpan: [], key: 1, disabled: true, width: 120, childProp: 'userId'},
+          { prop: 'designEngineer', label: '设计工程师', selectOrSpan: [], key: 1, disabled: true, width: 120, childProp: 'userId'},
+          { prop: 'qualityManager', label: '质量经理', selectOrSpan: [], key: 1, disabled: true, width: 120, childProp: 'userId'},
+          { prop: 'yfpoTc', label: 'YFPO TC', selectOrSpan: [], key: 2, disabled: true, width: 120, childProp: 'userId'},
+          { prop: 'yfpoFactory', label: 'YFPO 工厂', selectOrSpan: [], key: 2, disabled: true, width: 120, childProp: 'userId'},
+
           { prop: 'createTime', label: '创建时间',},
+          { prop: 'projectDetail', label: '项目详情', button: {value: '编辑', key: 1, }},
+          { prop: 'mouldDetail', label: '模具基本信息', button: {value: '编辑', key: 2, }, width: 120,},
         ],
 
-        // search
-        search: {},
-        options: {
-
-        },
 
         show: 0,
 

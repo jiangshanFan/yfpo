@@ -14,6 +14,8 @@ const state = {   //要设置的全局访问的state对象     //要设置的初
   mould_list: {},
   tabs: {},
   details: {},
+  design_type: {},
+  design_details: {},
 
   // 账户管理跳转新增或者编辑传参
   auth_userName: {},
@@ -35,6 +37,10 @@ const getters = {   //实时监听state值的变化(最新状态)
   tabs: (state) => {return state.tabs},
 //承载变化的 details 的值
   details: (state) => {return state.details},
+//承载变化的 design_type 的值
+  design_type: (state) => {return state.design_type},
+//承载变化的 design_details 的值
+  design_details: (state) => {return state.design_details},
 
   // 账户管理
   auth_userName: (state) => {return state.auth_userName},
@@ -57,6 +63,10 @@ const mutations = {//自定义改变state初始值的方法，这里面的参数
   tabs(state,item) {state.tabs = item;},
 //改变 details
   details(state,item) {state.details = item;},
+//改变 design_type
+  design_type(state,item) {state.design_type = item;},
+//改变 design_details
+  design_details(state,item) {state.design_details = item;},
 
   // 账户管理
   auth_userName(state, item) {state.auth_userName = item},
@@ -79,6 +89,10 @@ const actions = {//同上注释，item 为要变化的形参
   tabs(context,item){context.commit('tabs',item)},
 //异步触发改变 details
   details(context,item){context.commit('details',item)},
+//异步触发改变 design_type
+  design_type(context,item){context.commit('design_type',item)},
+//异步触发改变 design_details
+  design_details(context,item){context.commit('design_details',item)},
 
   // 账户管理
   auth_userName(context, item) {context.commit('auth_userName', item)},

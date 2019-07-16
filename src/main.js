@@ -38,7 +38,12 @@ Vue.prototype.$indexS = function(index,cur, size, name='') {  //序号--序列�
   if (name) {
     return name + (index + 1);
   } else {
-    let add = (cur - 1) * size + 1;
+    let add;
+    if (cur !== 1) {
+      add = (cur - 1) * size + 1;
+    } else {
+      add = 1;
+    }
     return index + add;
   }
 };
@@ -94,7 +99,7 @@ router.beforeEach((to, from, next) => {
 });
 
 router.afterEach((to, from) => {
-  console.log(to.matched)
+  // console.log(to.matched)
   // vm.$store.commit('Auth/SET_CURRENT_MENU', to.name)
 });
 

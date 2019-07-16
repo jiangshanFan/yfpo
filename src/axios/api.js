@@ -48,6 +48,14 @@ export const getToolInformationByMouldNo = data => {return $ajax({url: '/api/pro
 export const updateToolInformationByMouldNo = data => {return $ajax({url: '/api/project/updateToolInformationByMouldNo', method: 'post', data: data, meta: 1, })};
 
 
+//根据模号，获取设计评审清单列表
+export const getDesignStatistics = data => {return $ajax({url: '/api/project/getDesignStatistics', method: 'get', params: data,})};
+//根据模号，以及设计类型获取设计评审清单详情
+export const getDesignInfoByMouldNo = data => {return $ajax({url: '/api/project/getDesignInfoByMouldNo', method: 'get', params: data,})};
+//更新设计评审清单结果
+export const updateDesignInfo = data => {return $ajax({url: '/api/project/updateDesignInfo', method: 'post', data: data, meta: 1, })};
+
+
 //获取账户列表
 export const getUserList = data => {return $ajax({url: '/api/user/getUserList', method: 'get', params: data,})};
 //删除账户
@@ -60,3 +68,5 @@ export const changePwd = data => {return $ajax({url: '/api/user/changePwd', meth
 export const addUser = data => {return $ajax({url: '/api/user/addUser', method: 'post', data: data, meta: 1, })};
 //账户更新
 export const updateUser = data => {return $ajax({url: '/api/user/updateUser', method: 'post', data: data, meta: 1, })};
+//模具列表页面--根据角色获取用户下拉列表
+export const getUserListByRole = data => {return $ajax({url: '/api/user/getUserListByRole', method: 'get', params: data,})};
