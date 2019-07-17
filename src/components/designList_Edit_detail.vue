@@ -322,10 +322,17 @@ export default {
         width: 200px;
         height: 200px;
       }
-
       .uploadImg {
         width: 200px;
         height: 200px;
+      }
+      .delete {
+        display: none;
+      }
+    }
+    .imgContainer:hover {
+      .delete {
+        display: block;
       }
     }
   }

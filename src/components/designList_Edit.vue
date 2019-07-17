@@ -290,7 +290,7 @@
           { prop: 'name', label: '名称', width: 100,},
           { prop: 'verification', label: 'VERIFICATION', pre: true, minWidth: '600px', width: 'unset',},
 
-          { prop: 'status', label: 'STATUS', width: 120, select: [ { id: 'G', label: 'G'},{ id: 'Y', label: 'Y'},{ id: 'R', label: 'R'},{ id: 'N/A', label: 'N/A'},], disabled: true,},
+          { prop: 'status', label: 'STATUS', width: 120, select: [ { id: 'G', label: 'G'},{ id: 'Y', label: 'Y'},{ id: 'R', label: 'R'},], disabled: true,},
           { prop: 'remarks', label: 'REMARKS', minWidth: 100,},
         ],
 
