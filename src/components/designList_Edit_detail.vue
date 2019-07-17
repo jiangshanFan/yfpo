@@ -294,35 +294,30 @@ export default {
   }
 }
 
-@media screen and (min-width: 961px) {
+@media screen and (max-width: 1279px) and (min-width: 961px) {
+  .designList_Edit_detail {
+    width: 90%;
+    margin: 0 auto;
+    .imgContainer {
+      height: 150px;
+      .uploadLogo {
+        width: 150px;
+        height: 150px;
+      }
+      .uploadImg {
+        width: 150px;
+        height: 150px;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1280px) {
   .designList_Edit_detail {
     width: 80%;
     margin: 0 auto;
     .imgContainer {
-      position: relative;
       height: 200px;
-      margin: 0;
-      overflow: hidden;
-      .delete {
-        display: block;
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 30px;
-        height: 30px;
-        overflow: hidden;
-        /*overflow: hidden;*/
-        &:before {
-          content: '×';
-          top: 0;
-          right: 0;
-          font-size: 50px;
-          position: absolute;
-          cursor: pointer;
-          color: #fff;
-          background-color: #ccc;
-        }
-      }
       .uploadLogo {
         width: 200px;
         height: 200px;
@@ -335,4 +330,31 @@ export default {
     }
   }
 }
+
+.imgContainer {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  .delete {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    /*overflow: hidden;*/
+    &:before {
+      content: '×';
+      top: 0;
+      right: 0;
+      font-size: 50px;
+      position: absolute;
+      cursor: pointer;
+      color: #fff;
+      background-color: #ccc;
+    }
+  }
+}
+
 </style>
