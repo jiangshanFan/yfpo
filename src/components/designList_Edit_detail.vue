@@ -30,10 +30,14 @@
         <!-- list -->
         <el-row :gutter="20">
           <el-col class="ovwh mt20" :span="6" v-for="(img,ind) in allInfo.assessImage" :key="ind">
-            <p class="imgContainer tc" style="border: 1px solid #ccc;">
+            <el-col class="imgContainer tc" style="border: 1px solid #ccc;">
               <img class="uploadImg" :src="img" alt="图片" />
               <span class="delete" @click="deleteImg(ind,'assessImage')"></span>
-            </p>
+            </el-col>
+          </el-col>
+
+          <el-col class="ovwh mt20" :span="6" v-for="(type,index) in assessImage" :key="type+index">
+            <el-col class="imgContainer tc" style="border: 1px solid #ccc;" v-loading="assessImageLoading"></el-col>
           </el-col>
 
           <el-col :span="6">
@@ -47,6 +51,7 @@
                 :on-preview="handlePictureCardPreview"
                 :on-remove="handleRemove"
                 :on-success="handleAssessAvatarSuccess"
+                :before-upload="handleAssessBeforeUpload"
                 :data="uploadData"
                 :file-list="fileList">
                 <p class="w100 imgContainer tc"><img class="uploadLogo" src="../assets/upload_logo.png" alt="上传" /></p>
@@ -72,10 +77,14 @@
         <!-- list -->
         <el-row :gutter="20">
           <el-col class="ovwh mt20" :span="6" v-for="(img,ind) in allInfo.presentSituationImage" :key="ind">
-            <p class="imgContainer tc" style="border: 1px solid #ccc;">
+            <el-col class="imgContainer tc" style="border: 1px solid #ccc;">
               <img class="uploadImg" :src="img" alt="图片" />
               <span class="delete" @click="deleteImg(ind,'presentSituationImage')"></span>
-            </p>
+            </el-col>
+          </el-col>
+
+          <el-col class="ovwh mt20" :span="6" v-for="(type,index) in presentSituationImage" :key="type+index">
+            <el-col class="imgContainer tc" style="border: 1px solid #ccc;" v-loading="presentSituationImageLoading"></el-col>
           </el-col>
 
           <el-col :span="6">
@@ -89,6 +98,7 @@
                 :on-preview="handlePictureCardPreview"
                 :on-remove="handleRemove"
                 :on-success="handlePresentSituationAvatarSuccess"
+                :before-upload="handlePresentSituationBeforeUpload"
                 :data="uploadData"
                 :file-list="fileList">
                 <p class="w100 imgContainer tc"><img class="uploadLogo" src="../assets/upload_logo.png" alt="上传" /></p>
@@ -117,10 +127,14 @@
         <!-- list -->
         <el-row :gutter="20">
           <el-col class="ovwh mt20" :span="6" v-for="(img,ind) in allInfo.improveImage" :key="ind">
-            <p class="imgContainer tc" style="border: 1px solid #ccc;">
+            <el-col class="imgContainer tc" style="border: 1px solid #ccc;">
               <img class="uploadImg" :src="img" alt="图片" />
               <span class="delete" @click="deleteImg(ind,'improveImage')"></span>
-            </p>
+            </el-col>
+          </el-col>
+
+          <el-col class="ovwh mt20" :span="6" v-for="(type,index) in improveImage" :key="type+index">
+            <el-col class="imgContainer tc" style="border: 1px solid #ccc;" v-loading="improveImageLoading"></el-col>
           </el-col>
           <!-- 上传图片或者文件 -->
           <el-col :span="6">
@@ -133,6 +147,7 @@
                 :on-preview="handlePictureCardPreview"
                 :on-remove="handleRemove"
                 :on-success="handleImproveAvatarSuccess"
+                :before-upload="handleImproveBeforeUpload"
                 :data="uploadData"
                 :file-list="fileList">
                 <p class="w100 imgContainer tc"><img class="uploadLogo" src="../assets/upload_logo.png" alt="上传" /></p>
@@ -201,22 +216,58 @@ export default {
       // console.log(val);
     },
 
+    handleAssessBeforeUpload(file) {
+      this.assessImageLoading = true;
+      // console.log(file);
+      this.assessImage.push('assessImageLoading');
+      // console.log(this.improveImage);
+    },
+
     handleAssessAvatarSuccess(res, file) {//图片上传成功
       let img = res.msg[0].url;
       this.imgUrl += img + '|';  // 存储上传成功后的图片地址
       this.allInfo.assessImage.push(img);
+      this.assessImage.pop();
+
+      if (this.assessImage.length === 0) {
+        this.assessImageLoading = false;
+      }
+    },
+
+    handlePresentSituationBeforeUpload(file) {
+      this.presentSituationImageLoading = true;
+      // console.log(file);
+      this.presentSituationImage.push('presentSituationImageLoading');
+      // console.log(this.improveImage);
     },
 
     handlePresentSituationAvatarSuccess(res, file) {//图片上传成功
       let img = res.msg[0].url;
       this.imgUrl += img + '|';  // 存储上传成功后的图片地址
       this.allInfo.presentSituationImage.push(img);
+      this.presentSituationImage.pop();
+
+      if (this.presentSituationImage.length === 0) {
+        this.presentSituationImageLoading = false;
+      }
+    },
+
+    handleImproveBeforeUpload(file) {
+      this.improveImageLoading = true;
+      // console.log(file);
+      this.improveImage.push('improveImageLoading');
+      // console.log(this.improveImage);
     },
 
     handleImproveAvatarSuccess(res, file) {//图片上传成功
       let img = res.msg[0].url;
       this.imgUrl += img + '|';  // 存储上传成功后的图片地址
       this.allInfo.improveImage.push(img);
+      this.improveImage.pop();
+
+      if (this.improveImage.length === 0) {
+        this.improveImageLoading = false;
+      }
     },
 
     deleteImg(key, obj) {
@@ -270,6 +321,14 @@ export default {
       fileList: [],
       uploadData: {path: 'design_pc'}, //上传时需要传递的额外参数
       imgUrl: '',
+
+      assessImageLoading: true,
+      presentSituationImageLoading: true,
+      improveImageLoading: true,
+      assessImage: [],
+      presentSituationImage: [],
+      improveImage: [],
+
     }
   },
 }
