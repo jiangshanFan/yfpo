@@ -218,9 +218,20 @@ export default {
 
     handleAssessBeforeUpload(file) {
       this.assessImageLoading = true;
+      this.assessImage.push('assessImage');
       // console.log(file);
-      this.assessImage.push('assessImageLoading');
-      // console.log(this.improveImage);
+      // const reader = new FileReader();
+      // let p = new Promise((resolve, reject) => {
+      //   reader.onload = e => { resolve(reader) };
+      //   reader.onerror = e => { reject(e) }
+      // });
+      //
+      // reader.readAsDataURL(file);
+      // // console.log(reader);
+      // p.then((respose) => {
+      //   console.log(respose);
+      //   this.allInfo.assessImage.push(respose.result);
+      // })
     },
 
     handleAssessAvatarSuccess(res, file) {//图片上传成功

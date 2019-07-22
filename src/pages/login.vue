@@ -10,7 +10,7 @@
           <i slot="prefix" class="el-input__icon icon_user"></i>
         </el-input>
 
-        <el-input type="password" placeholder="请输入用密码" v-model.trim="pwd" size="small" clearable>
+        <el-input type="password" placeholder="请输入用密码" v-model.trim="pwd" size="small" clearable show-password>
           <i slot="prefix" class="el-input__icon icon_pwd"></i>
         </el-input>
 
