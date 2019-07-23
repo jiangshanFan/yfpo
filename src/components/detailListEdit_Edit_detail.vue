@@ -125,6 +125,7 @@ export default {
     },
     //转换 fileList 到拼接 字符串类型 imgUrl, | 连接
     fileToImg (val) {
+      this.imgUrl = '';
       for (let item of val) {
         this.imgUrl += item.url + '|';
       }

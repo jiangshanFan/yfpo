@@ -69,10 +69,12 @@
     },
     created() {
       this.tabs = this.$store.getters.tabs;
-    },
-    mounted() {
       this.activeName = this.tabs[0].name;
       this.getList();
+    },
+    mounted() {
+
+
     },
 
     updated() {
@@ -93,7 +95,7 @@
           this.allInfo = JSON.parse(JSON.stringify(res.msg));
           this.table.content = this.allInfo.checkList;
           this.remark = this.allInfo.remark;
-          this.loading = false;
+          setTimeout(() => {this.loading = false;},500);
           // setTimeout(this.saveInfo,500);  // maybe the web's delay will cause the error
         }
       },
