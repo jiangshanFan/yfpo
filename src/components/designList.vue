@@ -5,7 +5,17 @@
         <h1>设计评审清单表</h1>
 
         <!-- 表格数据 -->
-        <el-table :data="table.content" v-loading="loading" border size="small" style="width: 100%;margin-top:10px;" header-cell-class-name="header_cell table_header_shadow" tooltip-effect="light">
+        <el-table
+          :data="table.content"
+          v-loading="loading"
+          element-loading-text="拼命加载中"
+          element-loading-spinner="el-icon-loading"
+          element-loading-background="rgba(0, 0, 0, 0.9)"
+          border size="small"
+          style="width: 100%;margin-top:10px;"
+          header-cell-class-name="header_cell table_header_shadow"
+          tooltip-effect="light"
+        >
 
           <el-table-column fixed type="index" width="60" label="序号" align="center" :index="(index) => this.$indexS(index, currentPage, size)"></el-table-column>
 

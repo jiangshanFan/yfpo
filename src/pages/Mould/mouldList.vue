@@ -53,7 +53,19 @@
             <el-button type="primary" size="mini" @click="addOrEdit()" v-if="$store.getters.userLoginVO.role !== 2">新增</el-button>
 
             <!-- 表格数据 -->
-            <el-table :data="table.content" stripe border size="small" style="width: 100%;margin-top:10px;" header-cell-class-name="header_cell table_header_shadow" tooltip-effect="light">
+            <el-table
+              :data="table.content"
+              stripe
+              border
+              v-loading="loading"
+              element-loading-text="拼命加载中"
+              element-loading-spinner="el-icon-loading"
+              element-loading-background="rgba(0, 0, 0, 0.9)"
+              size="small"
+              style="width: 100%;margin-top:10px;"
+              header-cell-class-name="header_cell table_header_shadow"
+              tooltip-effect="light"
+            >
 
               <el-table-column fixed type="index" width="60" label="序号" align="center" :index="(index) => this.$indexS(index, currentPage, size)"></el-table-column>
 
@@ -142,6 +154,7 @@
     methods: {
       // get dataList of table
       async getList() {
+        this.loading = true;
         let params = {
           page: this.currentPage,
           size: this.size,
@@ -161,6 +174,7 @@
         let res = await getMouldList(params);
         if(res.status === 1) {
           this.table = res.msg;
+          this.loading = false;
         }
       },
 
@@ -326,6 +340,8 @@
 
         // detailListEdit SHOW NO
         showNo: 0,
+
+        loading: true,
       }
     },
   }

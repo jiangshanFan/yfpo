@@ -67,6 +67,7 @@
       this.designList = this.$store.getters.design_type;
     },
     mounted() {
+      this.loading = true;
       this.getList();
     },
 

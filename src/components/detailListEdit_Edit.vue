@@ -10,7 +10,7 @@
         <div v-loading="loading"
              element-loading-text="拼命加载中"
              element-loading-spinner="el-icon-loading"
-             element-loading-background="rgba(0, 0, 0, 0.8)">
+             element-loading-background="rgba(0, 0, 0, 0.9)">
           <h1 class="tc mt20">{{allInfo.largeClass}}</h1>
 
           <el-tabs class="mt20" v-model="activeName" type="card" @tab-click="handleClick">
@@ -69,16 +69,15 @@
     },
     created() {
       this.tabs = this.$store.getters.tabs;
+    },
+    mounted() {
+      this.loading = true;
       this.activeName = this.tabs[0].name;
       this.getList();
     },
-    mounted() {
-
-
-    },
 
     updated() {
-      this.saveInfo()
+      // this.saveInfo()
     },
     methods: {
       // get dataList of table
@@ -96,7 +95,7 @@
           this.table.content = this.allInfo.checkList;
           this.remark = this.allInfo.remark;
           setTimeout(() => {this.loading = false;},500);
-          // setTimeout(this.saveInfo,500);  // maybe the web's delay will cause the error
+          setTimeout(this.saveInfo,500);  // maybe the web's delay will cause the error
         }
       },
 
