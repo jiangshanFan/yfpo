@@ -50,6 +50,7 @@
           :on-preview="handlePictureCardPreview"
           :on-remove="handleRemove"
           :on-success="handleAvatarSuccess"
+          :on-progress="handleProgress"
           :data="uploadData"
           :file-list="fileList">
           <i class="el-icon-plus"><div slot="tip" class="el-upload__tip">添加图片</div></i>
@@ -59,7 +60,7 @@
         </el-dialog>
       </div>
 
-      <el-button type="primary" size="small" @click="saveInfos">提交</el-button>
+      <el-button type="primary" size="small" @click="saveInfos" :disabled="!uploadWork && !remark">提交</el-button>
     </el-row>
   </div>
 </template>
@@ -93,10 +94,10 @@ export default {
           this.list.forEach(item => {
             let imgeUrl = item.imageUrl;
             if(imgeUrl !== undefined && imgeUrl !== null && imgeUrl) {
-              if(imgeUrl.length > 1 && imgeUrl.charAt(imgeUrl.length - 1) === '|') { /** 需要先判断imgeUrl ！== null，才能获取length */
-              item.imageUrl = imgeUrl.substr(0,imgeUrl.length - 1).split('|');
+              if(imgeUrl.length > 1) { /** 需要先判断imgeUrl ！== null，才能获取length */
+              item.imageUrl = imgeUrl.split('|');
               }else {
-                item.imageUrl = imgeUrl.split('|');
+                item.imageUrl = imgeUrl.split('');
               }
             } else {
               item.imageUrl = [];
@@ -110,43 +111,58 @@ export default {
       // console.log(val);
     },
 
+    handleProgress(event, file, fileList) {
+      this.uploadWork = fileList.length;
+      // console.log(this.uploadWork)
+    },
+
     handleAvatarSuccess(res, file) {//图片上传成功
       let img = res.msg[0].url;
-      this.imgUrl += img + '|';
+      this.imgUrl.push(img);
     },
 
     handleRemove(file, fileList) {
-      this.fileToImg(fileList);
-      console.log(file, fileList);
+      this.imgUrl = [];
+      this.uploadWork = fileList.length;
+      fileList.forEach(item => {
+        this.imgUrl.push(item.response.msg[0].url);
+      });
+      // console.log(file, fileList);
     },
     handlePictureCardPreview(file) {
       this.imgeUrl = file.url;
       this.dialogVisible = true;
     },
-    //转换 fileList 到拼接 字符串类型 imgUrl, | 连接
+    /*//转换 fileList 到拼接 字符串类型 imgUrl, | 连接
     fileToImg (val) {
       this.imgUrl = '';
       for (let item of val) {
         this.imgUrl += item.url + '|';
       }
-    },
+    },*/
 
     // save infos
     async saveInfos() {
-      let params = {
-        imageUrl: this.imgUrl,
-        mouldNo: this.$store.getters.mould_list.mouldNo,
-        smallClass: this.$store.getters.details.serialNo,
-        remark: this.remark,
-      };
-      let res = await addCheckDetail(params);
-      if (res.status === 1) {
-        Message({showClose: true, type: 'success', message: '新增描述成功！'});
-        this.getList();
-        this.remark = '';
-        this.imgUrl = '';
-        this.fileList = [];
-        this.activeNames = 0;
+      if ((this.imgUrl.length && this.imgUrl.length === this.uploadWork) || this.remark) {
+        this.uploadWork = 0;  // ++++++++++++++++++++++++ deal the button click make the repeatedly submit the info to back-stage
+        let params = {
+          imageUrl: this.imgUrl.join('|'),
+          mouldNo: this.$store.getters.mould_list.mouldNo,
+          smallClass: this.$store.getters.details.serialNo,
+          remark: this.remark,
+        };
+        let res = await addCheckDetail(params);
+        setTimeout(() => {this.uploadWork = 1;},1000);
+        if (res.status === 1) {
+          Message({showClose: true, type: 'success', message: '新增描述成功！'});
+          this.getList();
+          this.remark = '';
+          this.imgUrl = [];
+          this.fileList = [];
+          this.activeNames = 0;
+        }
+      } else {
+        Message({showClose: true, type: 'warning', message: '请填写相关内容并耐心等待图片上传完成，谢谢！！'});
       }
     },
   },
@@ -161,7 +177,10 @@ export default {
       imageUrl: '',
       fileList: [],
       uploadData: {path: 'detail_pc'}, //上传时需要传递的额外参数
-      imgUrl: '',
+      imgUrl: [],
+
+      // upload complete
+      uploadWork: 1,
     }
   },
 }

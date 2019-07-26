@@ -203,7 +203,7 @@
             }
           }
         }
-        // console.log(arr);
+        console.log(arr);
         this.arrSpan = [...arr];
       },
 
@@ -273,6 +273,7 @@
       // show default module
       showDefault(val) {
         if (val) {
+          this.getList();
           this.show = true;
           this.$emit('change', 2)
         }

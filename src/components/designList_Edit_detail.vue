@@ -32,7 +32,7 @@
           <el-col class="ovwh mt20" :span="6" v-for="(img,ind) in allInfo.assessImage" :key="ind">
             <el-col class="imgContainer tc" style="border: 1px solid #ccc;">
               <img class="uploadImg" :src="img" alt="图片" />
-              <span class="delete" @click="deleteImg(ind,'assessImage')"></span>
+              <span class="delete" @click="deleteImg(ind,1)"></span>
             </el-col>
           </el-col>
 
@@ -51,6 +51,7 @@
                 :on-preview="handlePictureCardPreview"
                 :on-remove="handleRemove"
                 :on-success="handleAssessAvatarSuccess"
+                :on-progress="handleAssessProgress"
                 :before-upload="handleAssessBeforeUpload"
                 :data="uploadData"
                 :file-list="fileList">
@@ -79,7 +80,7 @@
           <el-col class="ovwh mt20" :span="6" v-for="(img,ind) in allInfo.presentSituationImage" :key="ind">
             <el-col class="imgContainer tc" style="border: 1px solid #ccc;">
               <img class="uploadImg" :src="img" alt="图片" />
-              <span class="delete" @click="deleteImg(ind,'presentSituationImage')"></span>
+              <span class="delete" @click="deleteImg(ind,2)"></span>
             </el-col>
           </el-col>
 
@@ -98,6 +99,7 @@
                 :on-preview="handlePictureCardPreview"
                 :on-remove="handleRemove"
                 :on-success="handlePresentSituationAvatarSuccess"
+                :on-progress="handlePresentSituationProgress"
                 :before-upload="handlePresentSituationBeforeUpload"
                 :data="uploadData"
                 :file-list="fileList">
@@ -129,7 +131,7 @@
           <el-col class="ovwh mt20" :span="6" v-for="(img,ind) in allInfo.improveImage" :key="ind">
             <el-col class="imgContainer tc" style="border: 1px solid #ccc;">
               <img class="uploadImg" :src="img" alt="图片" />
-              <span class="delete" @click="deleteImg(ind,'improveImage')"></span>
+              <span class="delete" @click="deleteImg(ind,3)"></span>
             </el-col>
           </el-col>
 
@@ -147,6 +149,7 @@
                 :on-preview="handlePictureCardPreview"
                 :on-remove="handleRemove"
                 :on-success="handleImproveAvatarSuccess"
+                :on-progress="handleImproveProgress"
                 :before-upload="handleImproveBeforeUpload"
                 :data="uploadData"
                 :file-list="fileList">
@@ -165,7 +168,7 @@
     </el-row>
 
     <el-row class="tc">
-      <el-button type="primary" size="small" @click="saveInfos">提交</el-button>
+      <el-button type="primary" size="small" @click="saveInfos" :disabled="!canUpdate">提交</el-button>
     </el-row>
   </div>
 </template>
@@ -178,11 +181,14 @@ import { updateDesignInfo } from '../axios/api.js'
 export default {
   name: "designList_Edit_detail",
   created() {
-    this.allInfo = this.$store.getters.design_details;
+    this.allInfo = JSON.parse(JSON.stringify(this.$store.getters.design_details));
     //test
     // this.imgUrl = this.allInfo.assessImage? this.allInfo.assessImage : '';
 
     this.getList();
+    this.assessWork = 0;
+    this.presentSituationWork = 0;
+    this.improveWork = 0;
   },
   methods: {
     // transfer string to img array
@@ -216,22 +222,16 @@ export default {
       // console.log(val);
     },
 
+
     handleAssessBeforeUpload(file) {
       this.assessImageLoading = true;
       this.assessImage.push('assessImage');
-      // console.log(file);
-      // const reader = new FileReader();
-      // let p = new Promise((resolve, reject) => {
-      //   reader.onload = e => { resolve(reader) };
-      //   reader.onerror = e => { reject(e) }
-      // });
-      //
-      // reader.readAsDataURL(file);
-      // // console.log(reader);
-      // p.then((respose) => {
-      //   console.log(respose);
-      //   this.allInfo.assessImage.push(respose.result);
-      // })
+    },
+
+    // get the init length of upload file
+    handleAssessProgress(event, file, fileList) {
+      this.assessWork = fileList.length;
+      // console.log(this.uploadWork)
     },
 
     handleAssessAvatarSuccess(res, file) {//图片上传成功
@@ -252,6 +252,12 @@ export default {
       // console.log(this.improveImage);
     },
 
+    // get the init length of upload file
+    handlePresentSituationProgress(event, file, fileList) {
+      this.presentSituationWork = fileList.length;
+      // console.log(this.uploadWork)
+    },
+
     handlePresentSituationAvatarSuccess(res, file) {//图片上传成功
       let img = res.msg[0].url;
       this.imgUrl += img + '|';  // 存储上传成功后的图片地址
@@ -270,6 +276,11 @@ export default {
       // console.log(this.improveImage);
     },
 
+    // get the init length of upload file
+    handleImproveProgress(event, file, fileList) {
+      this.improveWork = fileList.length;
+    },
+
     handleImproveAvatarSuccess(res, file) {//图片上传成功
       let img = res.msg[0].url;
       this.imgUrl += img + '|';  // 存储上传成功后的图片地址
@@ -281,8 +292,17 @@ export default {
       }
     },
 
-    deleteImg(key, obj) {
-      this.allInfo[obj].splice(key,1);
+    deleteImg(key, type) {
+      if (type === 1) {
+        this.allInfo.assessImage.splice(key,1);
+        this.assessWork -= 1;
+      } else if (type === 2) {
+        this.allInfo.presentSituationImage.splice(key,1);
+        this.presentSituationWork -= 1;
+      } else if (type === 3) {
+        this.allInfo.improveImage.splice(key,1);
+        this.improveWork -= 1;
+      }
     },
 
     handleRemove(file, fileList) {
@@ -302,21 +322,76 @@ export default {
 
     // save infos
     async saveInfos() {
-      let allInfo = JSON.parse(JSON.stringify(this.allInfo));
-      let params = {
-        mouldNo: this.$store.getters.mould_list.mouldNo,
-        reviewList: [
-          {
-            ...allInfo,
-            assessImage: allInfo.assessImage.join('|'),
-            presentSituationImage: allInfo.presentSituationImage.join('|'),
-            improveImage: allInfo.improveImage.join('|'),
-          },
-        ],
-      };
-      let res = await updateDesignInfo(params);
-      if (res.status === 1) {
-        Message({showClose: true, type: 'success', message: '新增描述成功！'});
+      this.canUpdate = false;
+      setTimeout(() => {this.canUpdate = true;},1000);
+      let store = this.$store.getters.design_details;
+      let assess = 0, presentSituation= 0, improve= 0;
+      if (store.assessImage) {
+        if (store.assessImage.indexOf('|') === -1) {
+          assess = 1;
+        } else {
+          assess = store.assessImage.split('|').length;
+        }
+      }
+      if (store.presentSituationImage) {
+        if (store.presentSituationImage.indexOf('|') === -1) {
+          presentSituation = 1;
+        } else {
+          presentSituation = store.presentSituationImage.split('|').length;
+        }
+      }
+      if (store.improveImage) {
+        if (store.improveImage.indexOf('|') === -1) {
+          improve = 1;
+        } else {
+          improve = store.improveImage.split('|').length;
+        }
+      }
+
+      if (
+        this.allInfo.remarks ||
+        this.allInfo.assessDescribe ||
+        this.allInfo.presentSituationDescribe ||
+        this.allInfo.improveDescribe ||
+        this.allInfo.assessImage.length ||
+        this.allInfo.presentSituationImage.length ||
+        this.allInfo.improveImage.length
+        ) {
+        if (
+          (
+            this.allInfo.assessImage.length ||
+            this.allInfo.presentSituationImage.length ||
+            this.allInfo.improveImage.length
+          ) &&
+          this.assessWork === (this.allInfo.assessImage.length - assess) &&
+          this.presentSituationWork === (this.allInfo.presentSituationImage.length - presentSituation) &&
+          this.improveWork === (this.allInfo.improveImage.length - improve)
+        ) {
+          let allInfo = JSON.parse(JSON.stringify({
+            ...this.allInfo,
+            assessImage: this.allInfo.assessImage.join('|'),
+            presentSituationImage: this.allInfo.presentSituationImage.join('|'),
+            improveImage: this.allInfo.improveImage.join('|'),
+          }));
+          let params = {
+            mouldNo: this.$store.getters.mould_list.mouldNo,
+            reviewList: [allInfo],
+          };
+
+          if (JSON.stringify(allInfo) !== JSON.stringify(store)) {
+            let res = await updateDesignInfo(params);
+            if (res.status === 1) {
+              Message({showClose: true, type: 'success', message: '更新信息成功！'});
+              this.$store.dispatch('design_details',allInfo);
+            }
+          } else {
+            Message({showClose: true, type: 'warning', message: '请更新相关内容，再点击提交！'});
+          }
+        } else {
+          Message({showClose: true, type: 'warning', message: '请耐心等待图片上传完成，再点击提交！'});
+        }
+      } else {
+        Message({showClose: true, type: 'warning', message: '请填写相关内容，再点击提交！'});
       }
     },
   },
@@ -339,7 +414,12 @@ export default {
       assessImage: [],
       presentSituationImage: [],
       improveImage: [],
+      assessWork: 0,
+      presentSituationWork: 0,
+      improveWork: 0,
 
+      // if update?
+      canUpdate: true,
     }
   },
 }
