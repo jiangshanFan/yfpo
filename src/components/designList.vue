@@ -127,8 +127,11 @@
       // show default module
       showDefault(val) {
         if (val) {
-          this.designList_show = 0;
-          this.breadcrumb = this.breadcrumb.slice(0,3);
+          // this.designList_show = 0;
+          // this.breadcrumb = this.breadcrumb.slice(0,3);
+          if (val === '4-1') {
+            this.$emit('ifChange','4-1');
+          }
           this.getList();
         }
       },

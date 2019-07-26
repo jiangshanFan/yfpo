@@ -322,6 +322,7 @@ export default {
 
     // save infos
     async saveInfos() {
+      let condition = false;
       this.canUpdate = false;
       setTimeout(() => {this.canUpdate = true;},1000);
       let store = this.$store.getters.design_details;
@@ -357,16 +358,34 @@ export default {
         this.allInfo.presentSituationImage.length ||
         this.allInfo.improveImage.length
         ) {
+
         if (
-          (
-            this.allInfo.assessImage.length ||
-            this.allInfo.presentSituationImage.length ||
-            this.allInfo.improveImage.length
-          ) &&
-          this.assessWork === (this.allInfo.assessImage.length - assess) &&
-          this.presentSituationWork === (this.allInfo.presentSituationImage.length - presentSituation) &&
-          this.improveWork === (this.allInfo.improveImage.length - improve)
+          this.allInfo.remarks ||
+          this.allInfo.assessDescribe ||
+          this.allInfo.presentSituationDescribe ||
+          this.allInfo.improveDescribe
         ) {
+          condition = true;
+        }
+
+        if (
+          this.assessWork ||
+          this.presentSituationWork ||
+          this.improveWork
+        ) {
+          if (
+            this.assessWork === (this.allInfo.assessImage.length - assess) &&
+            this.presentSituationWork === (this.allInfo.presentSituationImage.length - presentSituation) &&
+            this.improveWork === (this.allInfo.improveImage.length - improve)
+          ) {
+            condition = true;
+          } else {
+            condition = false;
+            Message({showClose: true, type: 'warning', message: '请耐心等待图片上传完成，再点击提交！'});
+          }
+        }
+
+        if (condition) {
           let allInfo = JSON.parse(JSON.stringify({
             ...this.allInfo,
             assessImage: this.allInfo.assessImage.join('|'),
@@ -382,16 +401,15 @@ export default {
             let res = await updateDesignInfo(params);
             if (res.status === 1) {
               Message({showClose: true, type: 'success', message: '更新信息成功！'});
-              this.$store.dispatch('design_details',allInfo);
+              // this.$store.dispatch('design_details',allInfo); 目前设计是更新后跳出当前页面，返回上一层，不需要更新vuex
+              this.$emit('changed','4-1');
             }
           } else {
             Message({showClose: true, type: 'warning', message: '请更新相关内容，再点击提交！'});
           }
-        } else {
-          Message({showClose: true, type: 'warning', message: '请耐心等待图片上传完成，再点击提交！'});
         }
       } else {
-        Message({showClose: true, type: 'warning', message: '请填写相关内容，再点击提交！'});
+        Message({showClose: true, type: 'warning', message: '请至少填写一项相关内容，再点击提交！'});
       }
     },
   },

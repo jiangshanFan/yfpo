@@ -64,9 +64,10 @@
 
     },
     created() {
-      this.designList = this.$store.getters.design_type;
+
     },
     mounted() {
+      this.designList = this.$store.getters.design_type;
       this.loading = true;
       this.getList();
     },
@@ -273,9 +274,11 @@
       // show default module
       showDefault(val) {
         if (val) {
-          this.getList();
           this.show = true;
-          this.$emit('change', 2)
+          if (val === '4-1') {
+            this.$emit('changed', '4-1')
+          }
+          this.getList();
         }
       },
     },
