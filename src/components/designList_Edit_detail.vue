@@ -189,6 +189,32 @@ export default {
     this.assessWork = 0;
     this.presentSituationWork = 0;
     this.improveWork = 0;
+    let store = this.$store.getters.design_details;
+    let assess = 0, presentSituation= 0, improve= 0;
+    if (store.assessImage) {
+      if (store.assessImage.indexOf('|') === -1) {
+        assess = 1;
+      } else {
+        assess = store.assessImage.split('|').length;
+      }
+    }
+    if (store.presentSituationImage) {
+      if (store.presentSituationImage.indexOf('|') === -1) {
+        presentSituation = 1;
+      } else {
+        presentSituation = store.presentSituationImage.split('|').length;
+      }
+    }
+    if (store.improveImage) {
+      if (store.improveImage.indexOf('|') === -1) {
+        improve = 1;
+      } else {
+        improve = store.improveImage.split('|').length;
+      }
+    }
+    this.assess = assess;
+    this.presentSituation = presentSituation;
+    this.improve = improve;
   },
   methods: {
     // transfer string to img array
@@ -296,12 +322,15 @@ export default {
       if (type === 1) {
         this.allInfo.assessImage.splice(key,1);
         this.assessWork -= 1;
+        this.assess -= 1;
       } else if (type === 2) {
         this.allInfo.presentSituationImage.splice(key,1);
         this.presentSituationWork -= 1;
+        this.presentSituation -= 1;
       } else if (type === 3) {
         this.allInfo.improveImage.splice(key,1);
         this.improveWork -= 1;
+        this.improve -= 1;
       }
     },
 
@@ -322,32 +351,9 @@ export default {
 
     // save infos
     async saveInfos() {
-      let condition = false;
+      let condition = true;
       this.canUpdate = false;
       setTimeout(() => {this.canUpdate = true;},1000);
-      let store = this.$store.getters.design_details;
-      let assess = 0, presentSituation= 0, improve= 0;
-      if (store.assessImage) {
-        if (store.assessImage.indexOf('|') === -1) {
-          assess = 1;
-        } else {
-          assess = store.assessImage.split('|').length;
-        }
-      }
-      if (store.presentSituationImage) {
-        if (store.presentSituationImage.indexOf('|') === -1) {
-          presentSituation = 1;
-        } else {
-          presentSituation = store.presentSituationImage.split('|').length;
-        }
-      }
-      if (store.improveImage) {
-        if (store.improveImage.indexOf('|') === -1) {
-          improve = 1;
-        } else {
-          improve = store.improveImage.split('|').length;
-        }
-      }
 
       if (
         this.allInfo.remarks ||
@@ -374,9 +380,9 @@ export default {
           this.improveWork
         ) {
           if (
-            this.assessWork === (this.allInfo.assessImage.length - assess) &&
-            this.presentSituationWork === (this.allInfo.presentSituationImage.length - presentSituation) &&
-            this.improveWork === (this.allInfo.improveImage.length - improve)
+            this.assessWork === (this.allInfo.assessImage.length - this.assess) &&
+            this.presentSituationWork === (this.allInfo.presentSituationImage.length - this.presentSituation) &&
+            this.improveWork === (this.allInfo.improveImage.length - this.improve)
           ) {
             condition = true;
           } else {
@@ -397,7 +403,7 @@ export default {
             reviewList: [allInfo],
           };
 
-          if (JSON.stringify(allInfo) !== JSON.stringify(store)) {
+          if (JSON.stringify(allInfo) !== JSON.stringify(this.$store.getters.design_details)) {
             let res = await updateDesignInfo(params);
             if (res.status === 1) {
               Message({showClose: true, type: 'success', message: '更新信息成功！'});
@@ -435,6 +441,10 @@ export default {
       assessWork: 0,
       presentSituationWork: 0,
       improveWork: 0,
+
+      assess: 0,
+      presentSituation: 0,
+      improve: 0,
 
       // if update?
       canUpdate: true,
