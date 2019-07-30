@@ -4,8 +4,15 @@
       <el-col :span="16" :offset="4">
         <h1 v-html="Object.keys($store.getters.mould_list).length?'项目编辑':'新增项目'"></h1>
 
-        <el-form :model="basicInfo" :rules="rules" ref="mouldAddOrEdit" label-width="120px" label-position="right" size="mini">
-
+        <el-form
+          :model="basicInfo"
+          :rules="rules"
+          ref="mouldAddOrEdit"
+          label-width="120px"
+          label-position="right"
+          size="mini"
+          :disabled="this.$store.getters.userLoginVO.role !== 1"
+        >
           <el-row :gutter="10" class="spec">
             <el-col :span="12">
               <el-form-item label="客户名称：" prop="customerName">
