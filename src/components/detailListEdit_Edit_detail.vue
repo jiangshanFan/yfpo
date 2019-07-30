@@ -1,5 +1,5 @@
 <template>
-  <div class="detailListEdit_Edit_detail" style="width:80%;margin:auto;">
+  <div class="detailListEdit_Edit_detail">
     <div class="title mb20">
       <span><b>检查内容：</b></span>
       <p v-html="allInfo.checkContent"></p>
@@ -21,7 +21,7 @@
             <el-row :gutter="20" v-if="item.imageUrl.length !== 0">
               <el-col class="ovwh mt20" style="height:240px;" :span="6" v-for="(img,ind) in item.imageUrl" :key="ind">
                 <p class="border">
-                  <img class="w100" :src="img" alt="图片" />
+                  <img class="w100" :src="img" alt="图片" style="max-height:238px;width:auto;" />
                 </p>
               </el-col>
             </el-row>

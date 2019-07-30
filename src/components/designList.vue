@@ -1,7 +1,7 @@
 <template>
-  <div class="designList p20">
+  <div class="designList">
     <el-row v-if="designList_show === 0">
-      <el-col :span="20" :offset="2">
+      <el-col>
         <h1>设计评审清单表</h1>
 
         <!-- 表格数据 -->

@@ -1,7 +1,7 @@
 <template>
   <div class="detailListEdit_tool">
     <el-row>
-      <el-col :span="20" :offset="2">
+      <el-col>
         <p class="tc p20 boxShadow_head">
           <span class="mr40">项目名称：{{basicInfo.projectName}}</span><span class="ml20">模具编号：{{basicInfo.mouldNo}}</span>
         </p>
@@ -10,8 +10,8 @@
 
         <!--  main content  -->
         <div class="mainContent mt20">
-          <el-form ref="detailListEdit_tool" :rules="rules" :model="form" label-width="100px" size="small" label-position="left" :disabled="this.$store.getters.userLoginVO.role !== 1">
-            <el-row class="flex_row_spaceAround mt40" :gutter="40">
+          <el-form ref="detailListEdit_tool" :rules="rules" :model="form" label-width="100px" size="small" label-position="right" :disabled="this.$store.getters.userLoginVO.role !== 1">
+            <el-row class="flex_row_spaceAround mt40">
               <el-row>
                 <el-form-item label="车型名称" prop="vehicleType">
                   <el-input clearable v-model="form.vehicleType"></el-input>
@@ -47,9 +47,9 @@
               </el-row>
             </el-row>
 
-            <el-row class="flex_column_center mt40" :gutter="40">
-              <el-col class="ovwh" :span="12">
-                <img src="../assets/tool_information.png" alt="产品图" style="max-height: 360px;" />
+            <el-row class="flex_column_center mt40">
+              <el-col class="ovwh tc" :span="12">
+                <img src="../assets/tool_information.png" alt="产品图" style="width: 100%;max-width: 360px;height: auto;" />
               </el-col>
               <el-col :span="12">
                 <el-col :span="12">
@@ -90,7 +90,7 @@
               </el-col>
             </el-row>
 
-            <el-row class="flex_row_spaceAround mt40" :gutter="40">
+            <el-row class="flex_row_spaceAround mt40">
               <el-row>
                 <el-form-item label="模具总重量" prop="totalWeight">
                   <el-input clearable style="width:calc(100% - 30px);margin-right: 5px;max-width:120px;" v-model="form.totalWeight"></el-input>kg

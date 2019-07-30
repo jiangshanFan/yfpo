@@ -1,7 +1,7 @@
 <template>
   <div class="detailListEdit_Edit">
     <el-row v-if="show">
-      <el-col :span="20" :offset="2">
+      <el-col>
         <p class="tc p20 boxShadow_head">
           <span class="mr40">项目名称：{{allInfo.projectName}}</span><span class="ml20">模具编号：{{allInfo.mouldNo}}</span>
         </p>

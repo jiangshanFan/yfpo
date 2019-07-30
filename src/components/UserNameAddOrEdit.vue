@@ -1,5 +1,5 @@
 <template>
-  <div class="UserNameAddOrEdit p20">
+  <div class="UserNameAddOrEdit">
     <el-row>
       <el-col :span="12" :offset="6">
         <el-form :model="form" status-icon :rules="rules" ref="UserNameAddOrEdit" label-width="130px" label-position="right" class="mt20" size="small">

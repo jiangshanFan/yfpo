@@ -21,7 +21,7 @@
       <!--  main content -->
       <el-main class="main">
         <transition name="slide-fade">
-          <router-view class="bg_f"></router-view>
+          <router-view></router-view>
         </transition>
 
         <!-- Form -->

@@ -456,7 +456,6 @@ export default {
 <style lang="scss" scoped>
 @media screen and (max-width: 960px) {
   .designList_Edit_detail {
-    width: 100%;
     margin: 0 auto;
     .imgContainer {
       height: 100px;
@@ -474,7 +473,6 @@ export default {
 
 @media screen and (max-width: 1279px) and (min-width: 961px) {
   .designList_Edit_detail {
-    width: 90%;
     margin: 0 auto;
     .imgContainer {
       height: 150px;
@@ -492,7 +490,6 @@ export default {
 
 @media screen and (min-width: 1280px) {
   .designList_Edit_detail {
-    width: 80%;
     margin: 0 auto;
     .imgContainer {
       height: 200px;

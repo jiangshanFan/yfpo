@@ -1,7 +1,7 @@
 <template>
-  <div class="detailListEdit p20">
+  <div class="detailListEdit">
     <el-row v-if="detailListEdit_show === 0">
-      <el-col :span="20" :offset="2">
+      <el-col>
         <h1>试模验收认可清单表</h1>
 
         <!-- 表格数据 -->

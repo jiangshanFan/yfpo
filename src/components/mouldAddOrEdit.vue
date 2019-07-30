@@ -1,7 +1,7 @@
 <template>
-  <div class="mouldAddOrEdit p20">
+  <div class="mouldAddOrEdit">
     <el-row>
-      <el-col :span="16" :offset="4">
+      <el-col :span="18" :offset="3">
         <h1 v-html="Object.keys($store.getters.mould_list).length?'项目编辑':'新增项目'"></h1>
 
         <el-form

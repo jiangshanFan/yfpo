@@ -1,107 +1,110 @@
 <template>
-  <div class="mouldList posr ovwh">
-    <!--面包屑-->
-    <breadcrumbList :breadcrumb-list="breadcrumb" @showDefault="showDefault"></breadcrumbList>
+  <div class="mouldList pl20 pr20 bg_f5 posr ovwa h100">
+    <div class="bg_f p20 border_box min_height">
+      <div class="mouldLayout">
+        <!--面包屑-->
+        <breadcrumbList :breadcrumb-list="breadcrumb" @showDefault="showDefault"></breadcrumbList>
 
-    <AddOrEdit v-if="show === 1" @ifChange="showDefault"></AddOrEdit>
+        <AddOrEdit v-if="show === 1" @ifChange="showDefault"></AddOrEdit>
 
-    <detailAddOrEdit v-else-if="show === 2" @ifChange="showDefault" @detailListEditTable="addBreadcrumb" :showNo="showNo"></detailAddOrEdit>
+        <detailAddOrEdit v-else-if="show === 2" @ifChange="showDefault" @detailListEditTable="addBreadcrumb" :showNo="showNo"></detailAddOrEdit>
 
-    <Tool v-else-if="show === 3" @ifChange="showDefault"></Tool>
+        <Tool v-else-if="show === 3" @ifChange="showDefault"></Tool>
 
-    <designList v-else-if="show === 4" @ifChange="showDefault" @designListTable="addBreadcrumb" :showNo="showNo"></designList>
+        <designList v-else-if="show === 4" @ifChange="showDefault" @designListTable="addBreadcrumb" :showNo="showNo"></designList>
 
-    <el-row v-else-if="show === 0">
-      <el-col :span="20" :offset="2">
-        <div class="mouldLists pl20 pr20">
-          <!--  search -->
-          <div class="section-search mb20 mt20">
-            <el-row class="boxShadow_head p20">
-              <div class="fl mr20 mb20">
-                <span class="c6">项目名称：</span>
-                <el-input v-model="search.value1" size="mini" clearable style="width:calc(100% - 100px);"></el-input>
+        <el-row v-else-if="show === 0">
+          <el-col>
+            <div class="mouldLists">
+              <!--  search -->
+              <div class="section-search mb20 mt20">
+                <el-row class="boxShadow_head p20">
+                  <div class="fl mr20 mb20">
+                    <span class="c6">项目名称：</span>
+                    <el-input v-model="search.value1" size="mini" clearable style="width:calc(100% - 100px);"></el-input>
+                  </div>
+
+                  <div class="fl mr20 mb20">
+                    <span class="c6">模具编号：</span>
+                    <el-input v-model="search.value2" size="mini" clearable style="width:calc(100% - 100px);"></el-input>
+                  </div>
+
+                  <div class="fl mr20 mb20">
+                    <span class="c6">项目创建时间：</span>
+                    <el-date-picker  clearable style="width:calc(100% - 100px);"
+                                     v-model="search.value3"
+                                     type="datetimerange"
+                                     align="right"
+                                     format="yyyy-MM-dd"
+                                     range-separator="-"
+                                     start-placeholder="开始日期"
+                                     end-placeholder="结束日期"
+                                     :default-time="['00:00:00', '23:59:59']"
+                                     size="mini">
+                    </el-date-picker>
+                  </div>
+
+                  <el-button type="primary" size="mini" icon="el-icon-search" class="fl" @click="Search()"></el-button>
+                </el-row>
+                <!--<hr>-->
               </div>
 
-              <div class="fl mr20 mb20">
-                <span class="c6">模具编号：</span>
-                <el-input v-model="search.value2" size="mini" clearable style="width:calc(100% - 100px);"></el-input>
-              </div>
+              <!-- content -->
+              <div class="mt20">
+                <!-- 添加 -->
+                <el-button type="primary" size="mini" @click="addOrEdit()" v-if="$store.getters.userLoginVO.role !== 2">新增</el-button>
 
-              <div class="fl mr20 mb20">
-                <span class="c6">项目创建时间：</span>
-                <el-date-picker  clearable style="width:calc(100% - 100px);"
-                                 v-model="search.value3"
-                                 type="datetimerange"
-                                 align="right"
-                                 format="yyyy-MM-dd"
-                                 range-separator="-"
-                                 start-placeholder="开始日期"
-                                 end-placeholder="结束日期"
-                                 :default-time="['00:00:00', '23:59:59']"
-                                 size="mini">
-                </el-date-picker>
-              </div>
+                <!-- 表格数据 -->
+                <el-table
+                  :data="table.content"
+                  stripe
+                  border
+                  v-loading="loading"
+                  element-loading-text="拼命加载中"
+                  element-loading-spinner="el-icon-loading"
+                  element-loading-background="rgba(0, 0, 0, 0.9)"
+                  size="small"
+                  style="width: 100%;margin-top:10px;"
+                  header-cell-class-name="header_cell table_header_shadow"
+                  tooltip-effect="light"
+                >
 
-              <el-button type="primary" size="mini" icon="el-icon-search" class="fl" @click="Search()"></el-button>
-            </el-row>
-            <!--<hr>-->
-          </div>
+                  <el-table-column fixed type="index" width="60" label="序号" align="center" :index="(index) => this.$indexS(index, currentPage, size)"></el-table-column>
 
-          <!-- content -->
-          <div class="mt20">
-            <!-- 添加 -->
-            <el-button type="primary" size="mini" @click="addOrEdit()" v-if="$store.getters.userLoginVO.role !== 2">新增</el-button>
+                  <!-- circle -->
+                  <column :header="header" @edits="addOrEdit" @changeStatus="changeStatus"></column>
 
-            <!-- 表格数据 -->
-            <el-table
-              :data="table.content"
-              stripe
-              border
-              v-loading="loading"
-              element-loading-text="拼命加载中"
-              element-loading-spinner="el-icon-loading"
-              element-loading-background="rgba(0, 0, 0, 0.9)"
-              size="small"
-              style="width: 100%;margin-top:10px;"
-              header-cell-class-name="header_cell table_header_shadow"
-              tooltip-effect="light"
-            >
-
-              <el-table-column fixed type="index" width="60" label="序号" align="center" :index="(index) => this.$indexS(index, currentPage, size)"></el-table-column>
-
-              <!-- circle -->
-              <column :header="header" @edits="addOrEdit" @changeStatus="changeStatus"></column>
-
-              <el-table-column fixed="right" label="设计评审清单" width="100" align="center">
-                <template slot-scope="scope">
+                  <el-table-column fixed="right" label="设计评审清单" width="100" align="center">
+                    <template slot-scope="scope">
                   <span>
                     <el-button class="underline f12" @click="edits(scope.row, 4)" type="text" align="center">编辑</el-button>
                   </span>
-                </template>
-              </el-table-column>
+                    </template>
+                  </el-table-column>
 
-              <el-table-column fixed="right" label="试模验收认可清单" width="120" align="center">
-                <template slot-scope="scope">
+                  <el-table-column fixed="right" label="试模验收认可清单" width="120" align="center">
+                    <template slot-scope="scope">
                   <span>
                     <el-button class="underline f12" @click="edits(scope.row, 2)" type="text" align="center">编辑</el-button>
                   </span>
-                </template>
-              </el-table-column>
-            </el-table>
-            <!-- 分页 -->
-            <div class="pagination fr ovw-h mt20">
-              <el-pagination @current-change="handleCurrentChange"
-                             :current-page="currentPage" :page-size="size"
-                             layout="total, prev, pager, next"
-                             :total="table.totalCount" v-if="table.totalCount">
-              </el-pagination>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <!-- 分页 -->
+                <div class="pagination fr ovw-h mt20">
+                  <el-pagination @current-change="handleCurrentChange"
+                                 :current-page="currentPage" :page-size="size"
+                                 layout="total, prev, pager, next"
+                                 :total="table.totalCount" v-if="table.totalCount">
+                  </el-pagination>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </el-col>
-    </el-row>
+          </el-col>
+        </el-row>
+      </div>
+    </div>
   </div>
-
 </template>
 
 <script>
@@ -185,6 +188,7 @@
       },
 
       handleCurrentChange(val) {
+        this.loading = true;
         this.currentPage = val;
         this.getList();
       },

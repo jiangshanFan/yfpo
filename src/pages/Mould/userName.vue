@@ -1,73 +1,77 @@
 <template>
-  <div class="userName posr">
-    <!--面包屑-->
-    <breadcrumbList :breadcrumb-list="breadcrumb" @showDefault="showDefault"></breadcrumbList>
+  <div class="userName pl20 pr20 bg_f5 posr ovwa h100">
+    <div class="bg_f p20 border_box min_height">
+      <div class="mouldLayout">
+        <!--面包屑-->
+        <breadcrumbList :breadcrumb-list="breadcrumb" @showDefault="showDefault"></breadcrumbList>
 
-    <AddOrEdit v-if="show" @ifChange="showDefault"></AddOrEdit>
+        <AddOrEdit v-if="show" @ifChange="showDefault"></AddOrEdit>
 
-    <el-row v-else>
-      <el-col :span="20" :offset="2">
-        <div class="userNames pl20 pr20">
-          <!--  search -->
-          <div class="section-search mb20 mt20">
-            <el-row class="boxShadow_head p20">
-              <div class="fl mr20 mb20">
-                <span class="c6">账户名称：</span>
-                <el-input v-model="search.accountName" size="mini" clearable style="width:calc(100% - 100px);"></el-input>
+        <el-row v-else>
+          <el-col>
+            <div class="userNames">
+              <!--  search -->
+              <div class="section-search mb20 mt20">
+                <el-row class="boxShadow_head p20">
+                  <div class="fl mr20 mb20">
+                    <span class="c6">账户名称：</span>
+                    <el-input v-model="search.accountName" size="mini" clearable style="width:calc(100% - 100px);"></el-input>
+                  </div>
+
+                  <div class="fl mr20 mb20">
+                    <span class="c6">姓名：</span>
+                    <el-input v-model="search.name" size="mini" clearable style="width:calc(100% - 100px);"></el-input>
+                  </div>
+
+                  <el-button type="primary" size="mini" icon="el-icon-search" class="fl" @click="Search()"></el-button>
+                </el-row>
               </div>
 
-              <div class="fl mr20 mb20">
-                <span class="c6">姓名：</span>
-                <el-input v-model="search.name" size="mini" clearable style="width:calc(100% - 100px);"></el-input>
+              <!-- content -->
+              <div class="mt20">
+                <!-- 添加 -->
+                <el-button type="primary" size="mini" @click="addOrEdit()">新增</el-button>
+
+                <!-- 表格数据 -->
+                <el-table
+                  :data="table.content"
+                  stripe
+                  border
+                  size="small"
+                  style="width: 100%;margin-top:10px;"
+                  header-cell-class-name="header_cell table_header_shadow"
+                  tooltip-effect="light">
+
+                  <el-table-column fixed type="index" width="60" label="序号" align="center"></el-table-column>
+
+                  <!-- circle -->
+                  <column :header="header"></column>
+
+                  <el-table-column fixed="right" label="操作" width="180" align="center">
+                    <template slot-scope="scope">
+                  <span v-if="scope.row.userId !== 1">
+                    <el-button class="underline f12" @click="addOrEdit(scope.row)" type="text" align="center">编辑</el-button>
+                    <el-button class="underline f12" @click="resets(scope.row)" type="text" align="center">重置密码</el-button>
+                    <el-button class="underline f12" @click="deletes(scope.row)" type="text" align="center">删除</el-button>
+                  </span>
+                    </template>
+                  </el-table-column>
+                </el-table>
+
+                <!-- 分页 -->
+                <div class="pagination fr ovw-h mt20">
+                  <el-pagination @current-change="handleCurrentChange"
+                                 :current-page="currentPage" :page-size="size"
+                                 layout="total, prev, pager, next"
+                                 :total="table.totalCount" v-if="table.totalCount">
+                  </el-pagination>
+                </div>
               </div>
-
-              <el-button type="primary" size="mini" icon="el-icon-search" class="fl" @click="Search()"></el-button>
-            </el-row>
-          </div>
-
-          <!-- content -->
-          <div class="mt20">
-            <!-- 添加 -->
-            <el-button type="primary" size="mini" @click="addOrEdit()">新增</el-button>
-
-            <!-- 表格数据 -->
-            <el-table
-              :data="table.content"
-              stripe
-              border
-              size="small"
-              style="width: 100%;margin-top:10px;"
-              header-cell-class-name="header_cell table_header_shadow"
-              tooltip-effect="light">
-
-              <el-table-column fixed type="index" width="60" label="序号" align="center"></el-table-column>
-
-              <!-- circle -->
-              <column :header="header"></column>
-
-              <el-table-column fixed="right" label="操作" width="180" align="center">
-                <template slot-scope="scope">
-              <span v-if="scope.row.userId !== 1">
-                <el-button class="underline f12" @click="addOrEdit(scope.row)" type="text" align="center">编辑</el-button>
-                <el-button class="underline f12" @click="resets(scope.row)" type="text" align="center">重置密码</el-button>
-                <el-button class="underline f12" @click="deletes(scope.row)" type="text" align="center">删除</el-button>
-              </span>
-                </template>
-              </el-table-column>
-            </el-table>
-
-            <!-- 分页 -->
-            <div class="pagination fr ovw-h mt20">
-              <el-pagination @current-change="handleCurrentChange"
-                             :current-page="currentPage" :page-size="size"
-                             layout="total, prev, pager, next"
-                             :total="table.totalCount" v-if="table.totalCount">
-              </el-pagination>
             </div>
-          </div>
-        </div>
-      </el-col>
-    </el-row>
+          </el-col>
+        </el-row>
+      </div>
+    </div>
   </div>
 
 </template>
