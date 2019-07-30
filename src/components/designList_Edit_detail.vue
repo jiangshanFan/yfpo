@@ -321,15 +321,24 @@ export default {
     deleteImg(key, type) {
       if (type === 1) {
         this.allInfo.assessImage.splice(key,1);
-        this.assessWork -= 1;
+        if (this.assessWork) {
+          this.assessWork -= 1;
+        }
+
         this.assess -= 1;
       } else if (type === 2) {
         this.allInfo.presentSituationImage.splice(key,1);
-        this.presentSituationWork -= 1;
+        if (this.presentSituationWork) {
+          this.presentSituationWork -= 1;
+        }
+
         this.presentSituation -= 1;
       } else if (type === 3) {
         this.allInfo.improveImage.splice(key,1);
-        this.improveWork -= 1;
+        if (this.improveWork) {
+          this.improveWork -= 1;
+        }
+
         this.improve -= 1;
       }
     },
@@ -414,6 +423,8 @@ export default {
             Message({showClose: true, type: 'warning', message: '请更新相关内容，再点击提交！'});
           }
         }
+      } else if (this.assessWork || this.presentSituationWork || this.presentSituationWork) {
+        Message({showClose: true, type: 'warning', message: '请耐心等待图片上传完成，再点击提交！'});
       } else {
         Message({showClose: true, type: 'warning', message: '请至少填写一项相关内容，再点击提交！'});
       }
