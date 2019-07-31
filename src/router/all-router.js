@@ -12,7 +12,7 @@ const allRoutes = [
     component: mould,
     name: 'mould',
     meta: {
-      name: '试模验收认可清单管理',
+      name: 'YFPO',
       icon: ''
     },
     children: [

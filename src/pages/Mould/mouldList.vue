@@ -338,7 +338,7 @@
 
         // breadcrumb
         breadcrumb: [
-          { id: 'mould', name: '试模验收认可清单管理', path: '/mould',},
+          { id: 'mould', name: 'YFPO', path: '/mould',},
           { id: 'mouldList', name: '模具列表', path: '/mould/mouldList', thing: 'showDefault'},
         ],
 

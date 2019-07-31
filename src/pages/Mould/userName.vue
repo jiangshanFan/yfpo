@@ -206,7 +206,7 @@
 
         // breadcrumb
         breadcrumb: [
-          { id: 'mould', name: '试模验收认可清单管理', path: '/mould',},
+          { id: 'mould', name: 'YFPO', path: '/mould',},
           { id: 'userName', name: '用户管理', path: '/mould/userName', thing: 'showDefault'},
         ],
       }
