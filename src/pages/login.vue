@@ -35,6 +35,7 @@
     },
     methods: {
       async login() {
+        let self = this;
         if(this.accountName !== '' && this.pwd !== '') {
           let params = {
             accountName: this.accountName,
@@ -54,7 +55,7 @@
 
               if(!this.$store.state.Auth.permissionList) {
                 this.$store.dispatch('Auth/FETCH_PERMISSION').then(() => {  // 此处的then写法在旧版IE不支持
-                  if (this.$store.getters.userLoginVO.role) {
+                  if (self.$store.getters.userLoginVO.role) {
                     this.$router.replace('/');
                   } else {
                     this.$router.push({path: '/mould/userName'});

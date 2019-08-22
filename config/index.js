@@ -18,10 +18,6 @@ module.exports = {
           '^/api': ''  // 替换target中的请求地址，也就是说以后你在请求http://10.2.1.144:62539这个地址的时候直接写成/api即可。
         } // http://localhost:3000/api/..... —>  http://168.90.0.1:8080/api/....
       },
-      '/apis': {
-        target: 'http://10.9.1.77:65288', // 你请求的第三方接口
-        changeOrigin: true, // 在本地会创建一个虚拟服务端，然后发送请求的数据，并同时接收请求的数据，这样服务端和服务端进行数据的交互就不会有跨域问题
-      }
     },
 
     // Various Dev Server settings
