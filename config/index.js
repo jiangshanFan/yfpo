@@ -17,6 +17,7 @@ module.exports = {
         pathRewrite: {  // 路径重写，
           '^/api': ''  // 替换target中的请求地址，也就是说以后你在请求http://10.2.1.144:62539这个地址的时候直接写成/api即可。
         }, // http://localhost:3000/api/..... —>  http://168.90.0.1:8080/api/....
+        cookieDomainRewrite: "localhost"
       },
     },
 

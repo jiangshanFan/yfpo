@@ -7,7 +7,8 @@ import vm from '../main.js'
 /****** 创建axios实例 ******/
 const $ajax = axios.create({
   // baseURL: 'http://127.0.0.1/api',  // api的base_url    process.env.BASE_URL
-  timeout: 10000  // 请求超时时间
+  timeout: 10000,  // 请求超时时间
+  withCredentials: true,
 });
 
 /****** request拦截器==>对请求参数做处理 ******/
