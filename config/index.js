@@ -16,8 +16,12 @@ module.exports = {
         changeOrigin: true, // 在本地会创建一个虚拟服务端，然后发送请求的数据，并同时接收请求的数据，这样服务端和服务端进行数据的交互就不会有跨域问题
         pathRewrite: {  // 路径重写，
           '^/api': ''  // 替换target中的请求地址，也就是说以后你在请求http://10.2.1.144:62539这个地址的时候直接写成/api即可。
-        }, // http://localhost:3000/api/..... —>  http://168.90.0.1:8080/api/....
+        } // http://localhost:3000/api/..... —>  http://168.90.0.1:8080/api/....
       },
+      '/apis': {
+        target: 'http://10.9.1.77:65288', // 你请求的第三方接口
+        changeOrigin: true, // 在本地会创建一个虚拟服务端，然后发送请求的数据，并同时接收请求的数据，这样服务端和服务端进行数据的交互就不会有跨域问题
+      }
     },
 
     // Various Dev Server settings
@@ -31,7 +35,7 @@ module.exports = {
     // Use Eslint Loader?
     // If true, your code will be linted during bundling and
     // linting errors and warnings will be shown in the console.
-    useEslint: true,
+    useEslint: false,
     // If true, eslint errors and warnings will also be shown in the error overlay
     // in the browser.
     showEslintErrorsInOverlay: false,

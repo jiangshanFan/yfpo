@@ -19,6 +19,7 @@ const state = {   //要设置的全局访问的state对象     //要设置的初
 
   // 账户管理跳转新增或者编辑传参
   auth_userName: {},
+
 };
 
 

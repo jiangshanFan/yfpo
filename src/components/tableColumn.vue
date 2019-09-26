@@ -37,7 +37,7 @@
             </el-select>
           </p>
 
-          <el-select v-else-if="h.select" v-model="scope.row[h.prop]" :value-key="h.childProp" ref="selectProp" placeholder="请选择" size="mini" @change="changeStatus(scope.row, h.prop)" :disabled="!h.disabled"> <!-- v-model的值与：value值一致，显示值为label值 -->
+          <el-select v-else-if="h.select" v-model="scope.row[h.prop]" :value-key="h.childProp" ref="selectProp" placeholder="请选择" size="mini" @change="changeStatus(scope.row, h.prop)" :disabled="!h.disabled"> <!--v-model的值与：value值一致，显示值为label值-->
             <el-option v-for="item in h.select" :key="item.id" :label="item.label" :value="h.childProp?item:item.id"></el-option>
           </el-select>
 
