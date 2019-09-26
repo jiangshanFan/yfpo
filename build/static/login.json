@@ -1,0 +1,9 @@
+{
+  "status": 1,
+  "message": "登录成功",
+  "authorization": "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJ7XCJhY2NvdW50XCI6XCJhZG1pblwiLFwiYWRtaW5cIjp0cnVlLFwiY29tcGFueVwiOlwi5rex5Zyz6ZO25a6d5bGx5pawXCIsXCJkZXB0XCI6XCLmioDmnK_kuK3lv4NcIixcImlkXCI6MSxcIm1haWxcIjpcIjEzODM4MzgzOEAxNjMuY29tXCIsXCJtYW5hZ2VyXCI6dHJ1ZSxcIm1vYmlsZVwiOlwiMTM4MzgzODM4MzhcIixcInN0YXR1c1wiOjEsXCJ1c2VyTmFtZVwiOlwi6LaF57qn566h55CG5ZGYXCIsXCJ3b3JrTm9cIjpcIjAwMDAwMDFcIn0iLCJpYXQiOjE1NjEwMTExNTcsInN1YiI6ImFsbCIsImlzcyI6Inlic3giLCJleHAiOjE1NjE2MTU5NTd9.8-sxSgMy6RMgipAvMQ3lH-C12bX2OtzSX4lj11-lmPI",
+  "userLoginVO": {
+    "accountName": "内部用户",
+    "role": 1
+  }
+}
