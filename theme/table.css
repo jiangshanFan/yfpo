@@ -115,6 +115,10 @@
 --------------------------*/
 /* Calendar
 --------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
+--------------------------*/
 /* Break-point
 --------------------------*/
 /* Break-points
@@ -238,6 +242,10 @@
 /* Link
 --------------------------*/
 /* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
@@ -357,6 +365,10 @@
 --------------------------*/
 /* Calendar
 --------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
+--------------------------*/
 /* Break-point
 --------------------------*/
 /* Break-points
@@ -480,6 +492,10 @@
 /* Link
 --------------------------*/
 /* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
@@ -654,7 +670,7 @@
     padding-left: 10px;
     line-height: 19px;
     font-size: 14px; }
-  .el-checkbox:last-child {
+  .el-checkbox:last-of-type {
     margin-right: 0; }
 
 .el-checkbox-button {
@@ -865,6 +881,10 @@
 --------------------------*/
 /* Calendar
 --------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
+--------------------------*/
 /* Break-point
 --------------------------*/
 /* Break-points
@@ -988,6 +1008,10 @@
 /* Link
 --------------------------*/
 /* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
@@ -1320,6 +1344,10 @@
 --------------------------*/
 /* Calendar
 --------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
+--------------------------*/
 /* Break-point
 --------------------------*/
 /* Break-points
@@ -1443,6 +1471,10 @@
 /* Link
 --------------------------*/
 /* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
@@ -1653,6 +1685,10 @@
 --------------------------*/
 /* Calendar
 --------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
+--------------------------*/
 /* Break-point
 --------------------------*/
 .el-table {
@@ -1672,7 +1708,6 @@
     min-height: 60px;
     text-align: center;
     width: 100%;
-    height: 100%;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -1717,6 +1752,8 @@
   .el-table__placeholder {
     display: inline-block;
     width: 20px; }
+  .el-table__append-wrapper {
+    overflow: hidden; }
   .el-table--fit {
     border-right: 0;
     border-bottom: 0; }
@@ -1983,7 +2020,7 @@
   .el-table--striped .el-table__body tr.el-table__row--striped.current-row td {
     background-color: #ecf5ff; }
   .el-table__body tr.hover-row > td, .el-table__body tr.hover-row.current-row > td, .el-table__body tr.hover-row.el-table__row--striped > td, .el-table__body tr.hover-row.el-table__row--striped.current-row > td {
-    background-color: #ecf5ff; }
+    background-color: #F5F7FA; }
   .el-table__body tr.current-row > td {
     background-color: #ecf5ff; }
   .el-table__column-resize-proxy {

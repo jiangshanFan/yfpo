@@ -87,7 +87,7 @@
               >
                 <p class="border">
                   <!-- <img class="w100" :src="img" alt="图片" style="max-height:238px;width:auto;" /> -->
-                  <el-image :src="img" class="w100" alt="图片" style="height:238px;width:auto;">
+                  <el-image :src="img" class="w100" :preview-src-list="item.imageUrl" alt="图片" style="height:238px;width:auto;">
                     <div slot="placeholder" class="image-slot stressing">
                       <i class="el-icon-loading"></i>
                       加载中
