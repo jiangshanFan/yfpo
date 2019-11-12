@@ -85,18 +85,62 @@
                 <li v-for="(item,index) in fileDataLeft" :key="index">
                   {{item.filename}}
                   <span style="margin-left:20px;">
-                    <a class="imga" :href="item.url" :download="item.filename"></a>
+                    <!-- <a class="imga" :href="item.url" :download="item.filename"></a> -->
+                    <a @click="adownloadleft(item.url)" class="imga"></a>
                     <img src="../assets/deletefile.png" alt @click="deleteLeft(item.id)" />
                   </span>
+                  <el-dialog
+                    title="提示"
+                    :visible.sync="dialogVisibleForDownload"
+                    width="20%"
+                    :center="true"
+                  >
+                    <span style="margin-left:39%">确认下载吗？</span>
+                    <span slot="footer" class="dialog-footer">
+                      <a
+                        class="btnStyle"
+                        @click="dialogVisibleForDownload = false"
+                        :href="firstdownloadleft"
+                        download
+                      >确 定</a>
+                      <el-button
+                        size="mini"
+                        style="text-align:center;"
+                        @click="dialogVisibleForDownload = false"
+                      >取 消</el-button>
+                    </span>
+                  </el-dialog>
                 </li>
               </ul>
               <ul class="downLoadTwoList">
                 <li v-for="(item,index) in fileDataRight" :key="index">
                   {{item.filename}}
                   <span style="margin-left:20px;">
-                    <a class="imga" :href="item.url" :download="item.filename"></a>
+                    <!-- <a class="imga" :href="item.url" :download="item.filename"></a> -->
+                    <a @click="bdownloadright(item.url)" class="imga"></a>
                     <img src="../assets/deletefile.png" alt @click="deleteRight(item.id)" />
                   </span>
+                  <el-dialog
+                    title="提示"
+                    :visible.sync="dialogVisibleForDownloadRight"
+                    width="20%"
+                    :center="true"
+                  >
+                    <span style="margin-left:39%">确认下载吗？</span>
+                    <span slot="footer" class="dialog-footer">
+                      <a
+                        class="btnStyle"
+                        @click="dialogVisibleForDownloadRight = false"
+                        :href="seconddownloadright"
+                        download
+                      >确 定</a>
+                      <el-button
+                        size="mini"
+                        style="text-align:center;"
+                        @click="dialogVisibleForDownloadRight = false"
+                      >取 消</el-button>
+                    </span>
+                  </el-dialog>
                 </li>
               </ul>
             </div>
@@ -390,8 +434,22 @@ export default {
   },
   mounted() {
     this.getList1();
+    let rse = window.location;
+    this.downloadUrl = rse.origin;
   },
   methods: {
+    // 左边下载地址
+    adownloadleft(url) {
+      // e.preventDefault();
+      this.firstdownloadleft = url;
+      this.dialogVisibleForDownload = true;
+    },
+    // 右边弹窗下载
+    bdownloadright(url) {
+      // e.preventDefault()
+      this.seconddownloadright = url;
+      this.dialogVisibleForDownloadRight = true;
+    },
     //删除附件
     async deleteLeft(id) {
       let res = await deleteEnclosure({
@@ -438,7 +496,9 @@ export default {
         this.fileDownLoadData = [];
         res.msg.forEach(item => {
           let download =
-            item.url + `?filename=${item.fileName.replace(/&/g, "")}`;
+            this.downloadUrl +
+            item.url +
+            `?filename=${item.fileName.replace(/&,\\#/g, "")}`;
           this.fileDownLoadData.push({
             url: download,
             filename: item.fileName,
@@ -547,11 +607,13 @@ export default {
     handleAssessBeforeUpload(file) {
       this.assessImageLoading = true;
       this.assessImage.push("assessImage");
+      this.assessWork += 1;
+
     },
 
     // get the init length of upload file
     handleAssessProgress(event, file, fileList) {
-      this.assessWork += 1;
+      // this.assessWork += 1;
       // console.log(this.uploadWork)
     },
 
@@ -571,12 +633,14 @@ export default {
       this.presentSituationImageLoading = true;
       // console.log(file);
       this.presentSituationImage.push("presentSituationImageLoading");
+      this.presentSituationWork += 1;
+
       // console.log(this.improveImage);
     },
 
     // get the init length of upload file
     handlePresentSituationProgress(event, file, fileList) {
-      this.presentSituationWork += 1;
+      // this.presentSituationWork += 1;
       // console.log(this.uploadWork)
     },
 
@@ -596,12 +660,14 @@ export default {
       this.improveImageLoading = true;
       // console.log(file);
       this.improveImage.push("improveImageLoading");
+      this.improveWork += 1;
       // console.log(this.improveImage);
     },
 
     // get the init length of upload file
     handleImproveProgress(event, file, fileList) {
-      this.improveWork += 1;
+      // this.improveWork += 1;
+      console.log(this.improveWork,)
     },
 
     handleImproveAvatarSuccess(res, file) {
@@ -620,7 +686,7 @@ export default {
       if (type === 1) {
         this.allInfo.assessImage.splice(key, 1);
 
-        if (this.assessWork) {
+        if (this.assess) {
           this.assess -= 1;
         } else if (this.assessWork) {
           this.assessWork -= 1;
@@ -813,13 +879,33 @@ export default {
       //左边下载地址数据源
       fileDataLeft: [],
       //右边下载地址数据源
-      fileDataRight: []
+      fileDataRight: [],
+      // 下载弹窗bool值
+      dialogVisibleForDownload: false,
+      dialogVisibleForDownloadRight: false,
+      // 当前页面下载前缀地址
+      downloadUrl: "",
+      // 左边下载地址
+      firstdownloadleft:'',
+      // 右边下载地址
+      seconddownloadright:''
     };
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.btnStyle {
+  display: inline-block;
+  width: 59px;
+  height: 28px;
+  border-radius: 3px;
+  text-decoration: none;
+  color: #fff;
+  background-color: rgba(64, 158, 255, 1);
+  line-height: 28px;
+  font-size: 12px;
+}
 .sideBar {
   display: inline-block;
   width: 3px;
