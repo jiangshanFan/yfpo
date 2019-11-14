@@ -39,20 +39,67 @@
             <div class="dowmLoad" style="overflow:auto; margin-top:10px;">
               <ul class="downloadList">
                 <li v-for="(item,index) in fileDataLeft" :key="index">
-                  {{item.filename}}
+                  <span>{{item.filename}}</span>
                   <span style="margin-left:20px;">
-                    <a class="imga" :href="item.url" :download="item.filename"></a>
+                    <!-- <a class="imga" :href="item.url" :download="item.filename"></a> -->
+                    <a @click="adownloadleft(item.url)" class="imga"></a>
                     <img src="../assets/deletefile.png" alt @click="deleteLeft(item.id)" />
                   </span>
+                  <el-dialog
+                    title="提示"
+                    :visible.sync="dialogVisibleForDownload"
+                    width="20%"
+                    :center="true"
+                  >
+                    <span style="margin-left:39%">确认下载吗？</span>
+                    <span slot="footer" class="dialog-footer">
+                      <a
+                        class="btnStyle"
+                        @click="dialogVisibleForDownload = false"
+                        :href="firstdownloadleft"
+                        download
+                      >确 定</a>
+                      <el-button
+                        size="mini"
+                        style="text-align:center;"
+                        @click="dialogVisibleForDownload = false"
+                      >取 消</el-button>
+                    </span>
+                  </el-dialog>
                 </li>
               </ul>
               <ul class="downLoadTwoList">
                 <li v-for="(item,index) in fileDataRight" :key="index">
-                  {{item.filename}}
+                  <span>{{item.filename}}</span>
                   <span style="margin-left:20px;">
-                    <a class="imga" :href="item.url" :download="item.filename"></a>
+                    <!-- <a class="imga" :href="item.url" :download="item.filename"></a> -->
+                    <a
+                      @click="bdownloadright(item.url)"
+                      class="imga"
+                    ></a>
                     <img src="../assets/deletefile.png" alt @click="deleteRight(item.id)" />
                   </span>
+                  <el-dialog
+                    title="提示"
+                    :visible.sync="dialogVisibleForDownloadRight"
+                    width="20%"
+                    :center="true"
+                  >
+                    <span style="margin-left:39%">确认下载吗？</span>
+                    <span slot="footer" class="dialog-footer">
+                      <a
+                        class="btnStyle"
+                        @click="dialogVisibleForDownloadRight = false"
+                        :href="seconddownloadright"
+                        download
+                      >确 定</a>
+                      <el-button
+                        size="mini"
+                        style="text-align:center;"
+                        @click="dialogVisibleForDownloadRight = false"
+                      >取 消</el-button>
+                    </span>
+                  </el-dialog>
                 </li>
               </ul>
             </div>
@@ -76,32 +123,42 @@
             </p>
           </template>
           <el-row class="w100 ovwh pl20 pr20">
-            <p class="w100 underline word_break">{{item.remark}}</p>
-            <el-row :gutter="20" v-if="item.imageUrl.length !== 0">
-              <el-col
-                class="ovwh mt20"
-                style="height:240px;"
-                :span="6"
-                v-for="(img,ind) in item.imageUrl"
-                :key="ind"
-              >
-                <p class="border">
-                  <!-- <img class="w100" :src="img" alt="图片" style="max-height:238px;width:auto;" /> -->
-                  <el-image :src="img" class="w100" :preview-src-list="item.imageUrl" alt="图片" style="height:238px;width:auto;">
-                    <div slot="placeholder" class="image-slot stressing">
-                      <i class="el-icon-loading"></i>
-                      加载中
-                      <span class="dot">...</span>
+            <div>
+              <p class="w100 underline word_break">{{item.remark}}</p>
+              <el-row :gutter="20" v-if="item.imageUrl.length !== 0">
+                <el-col
+                  class="ovwh mt20 showBox"
+                  :span="12"
+                  v-for="(img,ind) in item.imageUrl"
+                  :key="ind"
+                >
+                  <div class="border" style="display:flex">
+                    <!-- <img class="w100" :src="img" alt="图片" style="max-height:200px;width:auto;" /> -->
+                    <el-image
+                      :src="img"
+                      alt="图片"
+                      :preview-src-list="item.imageUrl"
+                      style="height:200px; width:200px; display:inline-block; flex:1;"
+                      fit="fill"
+                    >
+                      <div slot="placeholder" class="image-slot stressing">
+                        <i class="el-icon-loading"></i>
+                        加载中
+                        <span class="dot">...</span>
+                      </div>
+                    </el-image>
+                    <div class="imgSstyle">
+                      <p>图片说明：</p>
+                      <pre style="white-space:pre-wrap;">{{item.imageDescribe?item.imageDescribe.split("|")[ind]:''}}</pre>
                     </div>
-                  </el-image>
-                </p>
-              </el-col>
-            </el-row>
+                  </div>
+                </el-col>
+              </el-row>
+            </div>
           </el-row>
         </el-collapse-item>
       </el-collapse>
     </el-row>
-
     <!-- add -->
     <el-row class="mt20">
       <i class="sideBar"></i>
@@ -117,10 +174,30 @@
 
       <!-- 上传图片或者文件 -->
       <div class="add-upload mt20 mb20">
+        <div
+          class="showImgDiv"
+          style="height:138px;"
+          v-for="item1 in pictureName"
+          :key="item1.name"
+          v-loading="loading"
+        ></div>
+        <div v-for="(item,index) in imgList" :key="index" class="showStyle">
+          <div class="showImgDiv imgContainer">
+            <img class="showImgStyle" :src="item" alt />
+            <span class="delete" @click="deleteImge(item)"></span>
+          </div>
+          <el-input
+            type="textarea"
+            class="inputStyle"
+            :rows="6"
+            placeholder="请输入内容"
+            resize="none"
+            v-model="inputValue[item]"
+          ></el-input>
+        </div>
         <el-upload
           action="/api/upload/file/uploadManyFile"
           accept="image/*"
-          list-type="picture-card"
           multiple
           :on-preview="handlePictureCardPreview"
           :on-remove="handleRemove"
@@ -128,10 +205,31 @@
           :on-progress="handleProgress"
           :data="uploadData"
           :file-list="fileList"
+          :show-file-list="false"
+          :before-upload="callBackBefore"
         >
-          <i class="el-icon-plus">
-            <div slot="tip" class="el-upload__tip">添加图片</div>
-          </i>
+          <div class="upStyle">
+            <i class="el-icon-plus">
+              <div slot="tip" class="el-upload__tip">添加图片</div>
+            </i>
+          </div>
+          <!-- <i slot="default" class="el-icon-plus"></i>
+          <div slot="file" slot-scope="{file}" style="display:flex;">
+            <div class="upImgStyle">
+              <img class="el-upload-list__item-thumbnail" :src="file.url" alt />
+            </div>
+            <div style="flex:6;">
+              <el-input
+              class="elInput"
+              type="textarea"
+              :ref="file.name"
+              :rows="6"
+              placeholder="请输入内容"
+              resize="none"
+              v-model="inputValue[file.name]"
+            ></el-input>
+            </div>
+          </div>-->
         </el-upload>
         <el-dialog :visible.sync="dialogVisible">
           <img width="100%" :src="imgeUrl" alt />
@@ -145,7 +243,7 @@
         :disabled="!uploadWork && !remark"
       >提交</el-button>
       <!-- 新增保存按钮 -->
-      <el-button size="small" style="margin-left:32px;" type="primary" @click="saveCheck">保存</el-button>
+      <el-button size="small" style="margin-left:25px;" type="primary" @click="saveCheck">保存</el-button>
     </el-row>
   </div>
 </template>
@@ -171,8 +269,56 @@ export default {
   },
   mounted() {
     this.getEnclosure();
+    let rse = window.location;
+    this.downloadUrl = rse.origin;
   },
   methods: {
+    // 左边下载地址
+    adownloadleft(url){
+      this.firstdownloadleft=url
+      this.dialogVisibleForDownload=true
+    },
+    // 右边弹窗下载
+    bdownloadright(url){
+      this.seconddownloadright=url
+      this.dialogVisibleForDownloadRight=true
+    },
+    //删除上传列表图片
+    deleteImge(item) {
+      this.imgUrl = [];
+      for (let i = 0; i < this.imgList.length; i++) {
+        if (item === this.imgList[i]) {
+          this.imgList.splice(i, 1);
+          this.imgList.forEach(item => {
+            this.imgUrl.push(item);
+          });
+        }
+      }
+    },
+    // 上传图片鼠标移入事件
+    // enter(index) {
+    //   this.isActive = index;
+    // },
+    // moveout() {
+    //   this.isActive = null;
+    // },
+    //照片备注处理
+    upImgRemarks() {
+      let obj = JSON.parse(JSON.stringify(this.inputValue));
+      this.inputValue = {};
+      this.imgList.forEach(item => {
+        if (Object.keys(obj).indexOf(item) === -1) {
+          this.inputValue[item] = " ";
+        } else {
+          this.inputValue[item] = obj[item];
+        }
+      });
+      let arr = [];
+      for (let [key, value] of Object.entries(this.inputValue)) {
+        arr.push(value);
+      }
+      this.upImgData = arr.join("|");
+    },
     //删除附件
     async deleteLeft(id) {
       let res = await deleteEnclosure({
@@ -208,6 +354,7 @@ export default {
     },
     //保存详情
     async saveCheck() {
+      this.upImgRemarks();
       if (
         !this.messageShow ||
         this.remark !== "" ||
@@ -219,7 +366,8 @@ export default {
           imageUrl: image,
           mouldNo: this.$store.getters.mould_list.mouldNo,
           remark: this.remark,
-          smallClass: this.allInfo.serialNo
+          smallClass: this.allInfo.serialNo,
+          imageDescribe: this.upImgData
         });
         if (res.status === 1) {
           if (this.messageShow) {
@@ -258,17 +406,25 @@ export default {
           return;
         } else {
           this.url = data.msg.imageUrl.split("|");
+          let arr = [];
+          if (data.msg.imageDescribe) {
+            arr = data.msg.imageDescribe.split("|");
+          }
+          let obj = {};
           for (let i = 0; i < this.url.length; i++) {
             this.fileList.push({ url: this.url[i] });
             this.imgList.push(this.url[i]);
+            obj[this.url[i]] = arr[i];
             this.imgUrl.push(this.url[i]);
           }
+          this.inputValue = Object.assign({}, obj);
         }
       }
       if (!this.messageShow) {
         this.fileList = [];
         this.imgList = [];
         this.remark = "";
+        this.imgUrl = [];
         this.saveCheck();
       }
     },
@@ -285,7 +441,9 @@ export default {
         this.fileDownLoadData = [];
         res.msg.forEach(item => {
           let download =
-            item.url + `?filename=${item.fileName.replace(/[&,\\#]/g, "")}`;
+            this.downloadUrl +
+            item.url +
+            `?filename=${item.fileName.replace(/[&,\\#]/g, "")}`;
           this.fileDownLoadData.push({
             url: download,
             filename: item.fileName,
@@ -303,7 +461,6 @@ export default {
     },
     // get list
     async getList() {
-      // console.log(this.activeName)
       let params = {
         mouldNo: this.$store.getters.mould_list.mouldNo,
         smallClass: this.$store.getters.details.serialNo
@@ -364,6 +521,11 @@ export default {
       let img = res.msg[0].url;
       this.imgUrl.push(img);
       this.imgList.push(img);
+      for (let i = 0; i < this.pictureName.length; i++) {
+        if (this.pictureName[i].name == file.name) {
+          this.pictureName.splice(i, 1);
+        }
+      }
     },
 
     handleRemove(file, fileList) {
@@ -384,6 +546,10 @@ export default {
       this.imgeUrl = file.url;
       this.dialogVisible = true;
     },
+    // 上传之前钩子
+    callBackBefore(file) {
+      this.pictureName.push({ name: file.name });
+    },
     /*//转换 fileList 到拼接 字符串类型 imgUrl, | 连接
     fileToImg (val) {
       this.imgUrl = '';
@@ -394,16 +560,19 @@ export default {
 
     // save infos
     async saveInfos() {
+      this.upImgRemarks();
       if (
         (this.imgUrl.length && this.imgUrl.length === this.uploadWork) ||
-        this.remark
+        this.remark ||
+        this.imgList.length
       ) {
         this.uploadWork = 0; // ++++++++++++++++++++++++ deal the button click make the repeatedly submit the info to back-stage
         let params = {
           imageUrl: this.imgUrl.join("|"),
           mouldNo: this.$store.getters.mould_list.mouldNo,
           smallClass: this.$store.getters.details.serialNo,
-          remark: this.remark
+          remark: this.remark,
+          imageDescribe: this.upImgData
         };
         let res = await addCheckDetail(params);
         setTimeout(() => {
@@ -420,6 +589,10 @@ export default {
           this.activeNames = 0;
           this.fileList = [];
           this.url = [];
+          //上传清空图片数据源
+          this.imgList = [];
+          //上传清空备注数据
+          this.upImgData = "";
           this.getList();
           this.getDetail();
         }
@@ -466,13 +639,110 @@ export default {
       fileDataRight: [],
       messageShow: true,
       // 文件获取id
-      id: ""
+      id: "",
+      //照片备注数据
+      inputValue: {},
+      //照片备注上传保存数据
+      upImgData: "",
+      // 下载弹窗bool值
+      dialogVisibleForDownload: false,
+      dialogVisibleForDownloadRight: false,
+      // isActive: false
+      loading: true,
+      // 图片加载框数据
+      pictureName: [],
+      // 当前页面下载前缀地址
+      downloadUrl: "",
+      // 左边下载地址
+      firstdownloadleft:'',
+      // 右边下载地址
+      seconddownloadright:''
     };
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.btnStyle {
+  display: inline-block;
+  width: 59px;
+  height: 28px;
+  border-radius: 3px;
+  text-decoration: none;
+  color: #fff;
+  background-color: rgba(64, 158, 255, 1);
+  line-height: 28px;
+  font-size: 12px;
+}
+.upStyle {
+  width: 138px;
+  height: 138px;
+  border: 1px dashed #ccc;
+  font-size: 25px;
+  line-height: 138px;
+  border-radius: 4px;
+}
+.imgSstyle {
+  display: inline-block;
+  flex: 2;
+  width: 100px;
+  height: 200px;
+  padding: 6px;
+  box-sizing: border-box;
+  overflow: auto;
+}
+.showBox {
+  height: 240px;
+  display: block;
+}
+.showStyle {
+  width: 100%;
+  height: 138px;
+  display: flex;
+  margin-bottom: 5px;
+  .showImgDiv {
+    display: inline-block;
+    height: 138px;
+    width: 138px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    .showImgStyle {
+      width: 100%;
+    }
+  }
+}
+.imgContainer {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  .delete {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    /*overflow: hidden;*/
+    &:before {
+      content: "×";
+      top: 0;
+      right: 0;
+      font-size: 30px;
+      position: absolute;
+      cursor: pointer;
+      color: #fff;
+      background-color: #ccc;
+    }
+  }
+}
+.inputStyle {
+  display: inline-block;
+  height: 146px !important;
+  flex: 6;
+  margin-left: 3px;
+}
+
 .sideBar {
   display: inline-block;
   width: 3px;

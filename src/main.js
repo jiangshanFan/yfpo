@@ -6,7 +6,7 @@ import App from './App'
 import store from './vuex/index'
 import router from './router/index'
 import ElementUI from 'element-ui'
-import '../theme/index.css'
+import 'element-ui/lib/theme-chalk/index.css'
 
 Vue.use(ElementUI);
 Vue.use(store);
@@ -48,6 +48,40 @@ Vue.prototype.$indexS = function(index,cur, size, name='') {  //序号--序列�
   }
 };
 
+/*验证处理方法*/
+
+Vue.prototype.$len = function checkUserName(numb, val) {
+  // var flag = 1;
+  //[\u4e00-\u9fa5]为汉字的unicode编码，/i表示匹配的时候不区分大小写。
+  var rxcn = /[\u4e00-\u9fa5]/g;
+  var num = 0;
+  // 全局查找中文字符替换成两个 ** 字符表示，然后获取替换后的字符串的字符长度 str.length
+  var str = val.replace(rxcn, '**');
+  num = str.length;
+  // 特殊字符限制
+  // if (/[^a-z\d\u4e00-\u9fa5]/.test(val)) {
+  //   flag = 3;
+  // }
+  // if (flag != 3) {
+  if (num > numb) {
+    this.$message({
+      type: 'warning',
+      message: '超出字数限制'
+    })
+    return 3;
+  } else if (num < 1) {
+    this.$message({
+      type: 'warning',
+      message: '不能为空'
+    })
+    return 2;
+  } else {
+    return 1;
+  }
+  //   }else {
+
+  //  }
+}
 
 /**
  * 序号序列化

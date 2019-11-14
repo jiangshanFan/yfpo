@@ -14,7 +14,12 @@
           element-loading-spinner="el-icon-loading"
           element-loading-background="rgba(0, 0, 0, 0.8)"
         >
-          <h1 class="tc mt20">{{designList.tableName}}</h1>
+          <!-- <a class="exportExcelStyle" :href="`/api/project/exportDesignInfoByMouldNo?mouldNo=${this.$store.getters.mould_list.mouldNo}&type=1`" download>导出Excel</a> -->
+          <el-button class="change" type="primary" size="mini" @click="changeInfo">更新提醒</el-button>
+          <el-button class="changeOne" type="primary" size="mini" @click="getExcelOut">导出表格</el-button>
+          <div style="width:93%; text-align:center;">
+            <h1 class="tc mt20" style="padding-right">{{designList.tableName}}</h1>
+          </div>
           <div id="main" style="width:100%; height:200px;"></div>
           <!-- 表格数据 -->
           <el-table
@@ -73,7 +78,15 @@
 /* eslint-disable */
 import { Message, MessageBox, Loading } from "element-ui";
 /** 导入api.js */
-import { getDesignInfoByMouldNo, updateDesignInfo } from "../axios/api.js";
+import {
+  getDesignInfoByMouldNo,
+  updateDesignInfo,
+  // exportDesignInfoByMouldNo,
+  createDesignInfoByMouldNoExcel,
+  getDesignInfoExcelStatus,
+  downloadDesignInfoExcel,
+  sendMailRemind
+} from "../axios/api.js";
 import column from "./tableColumn";
 import designList_Edit_detail from "./designList_Edit_detail";
 import Echarts from "../../node_modules/echarts/dist/echarts.min.js";
@@ -91,10 +104,59 @@ export default {
     this.getList();
   },
 
-  updated() {
-    // this.saveInfo()
-  },
+  updated() {},
   methods: {
+    // 更新提醒
+    async changeInfo() {
+      let res = await sendMailRemind({
+        mouldNo: this.allInfo.mouldNo,
+        smallClassOrTableName: this.designList.tableName
+      });
+      if (res.status === 1) {
+        this.$message({
+          type: "success",
+          message: "已成功发送邮件"
+        });
+      } else {
+        this.$message({
+          type: "warning",
+          message: "未能成功发送，请稍后尝试"
+        });
+      }
+    },
+    // 导出Excel方法
+    async getExcelOut() {
+      let res = await createDesignInfoByMouldNoExcel({
+        mouldNo: this.allInfo.mouldNo,
+        type: this.designList.type
+      });
+      // 结果判断成功使用定时器轮询请求接口 直至success成功
+      if (res.status === 1) {
+        this.loading=true
+        let myTimer = callback => {
+          this.timer = setInterval(() => {
+            let resg = getDesignInfoExcelStatus({
+              mark: res.msg
+            });
+            callback(resg);
+          }, 3000);
+        };
+        myTimer(val => {
+          val.then(end => {
+            if (end.msg === "success") {
+              this.loading=false
+              clearInterval(this.timer);
+              // 调用下载接口
+              let reg = downloadDesignInfoExcel({
+                mark: res.msg,
+                mouldNo: this.allInfo.mouldNo,
+                type: this.designList.type
+              });
+            }
+          });
+        });
+      }
+    },
     // Echarts封装
     async echart(gyr) {
       //导入echarts
@@ -254,7 +316,6 @@ export default {
 
       if (res.status === 1) {
         this.allInfo = JSON.parse(JSON.stringify(res.msg));
-        console.log(this.allInfo);
 
         this.table.content = this.allInfo.reviewList;
         this.loading = false;
@@ -520,13 +581,37 @@ export default {
         y: 0,
         r: 0,
         noSure: 0
-      }
+      },
+      // 导出excel秘钥
+      keyUp: "",
+      // 轮询请求接口回调值
+      sorF: 0,
+      // 定时器全局定义
+      timer: null
     };
   }
 };
 </script>
 
 <style lang="scss">
+.change {
+  float: right;
+}
+.changeOne {
+  float: left;
+}
+.exportExcelStyle {
+  float: left;
+  width: 80px;
+  height: 30px;
+  background: #409eff;
+  color: white;
+  text-decoration: none;
+  line-height: 30px;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 12px;
+}
 .el-tabs__item {
   height: 32px !important;
   line-height: 32px !important;

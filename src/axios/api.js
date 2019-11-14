@@ -64,7 +64,20 @@ export const getDesignStatistics = data => {return $ajax({url: '/api/project/get
 export const getDesignInfoByMouldNo = data => {return $ajax({url: '/api/project/getDesignInfoByMouldNo', method: 'get', params: data,})};
 //更新设计评审清单结果
 export const updateDesignInfo = data => {return $ajax({url: '/api/project/updateDesignInfo', method: 'post', data: data, meta: 1, })};
+//导出Excel
+// export const exportDesignInfoByMouldNo = data => {return $ajax({url: '/api/project/exportDesignInfoByMouldNo', method: 'get', params: data,})};
+//邮件发送提醒
+export const sendMailRemind = data => {return $ajax({url: '/api/mail/sendMailRemind', method: 'post', data: data,})};
 
+/*
+ *Excel导出请求路径
+ */ 
+// 设计评审清单生成Excel
+export const createDesignInfoByMouldNoExcel = data => {return $ajax({url: '/api/project/createDesignInfoByMouldNoExcel', method: 'get', params: data,})};
+// 设计评审清单生成Excel状态
+export const getDesignInfoExcelStatus = data => {return $ajax({url: '/api/project/getDesignInfoExcelStatus', method: 'get', params: data,})};
+//  下载Excel
+export const downloadDesignInfoExcel = data => {return $ajax({url: '/api/project/downloadDesignInfoExcel', method: 'get', params: data,responseType: 'blob'})};
 
 //获取账户列表
 export const getUserList = data => {return $ajax({url: '/api/user/getUserList', method: 'get', params: data,})};

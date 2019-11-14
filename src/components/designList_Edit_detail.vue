@@ -394,7 +394,7 @@ export default {
     this.remarkData.mouldNo = this.allInfo.mouldNo;
     this.remarkData.reviewId = this.allInfo.reviewId;
     this.dataFile.mouldNo = this.allInfo.mouldNo;
-    this.dataFile.classId = this.allInfo.id;
+    this.dataFile.classId = this.allInfo.reviewId;
     //test
     // this.imgUrl = this.allInfo.assessImage? this.allInfo.assessImage : '';
 
@@ -487,7 +487,7 @@ export default {
     async getEnclosure() {
       let res = await getEnclosureList({
         mouldNo: this.allInfo.mouldNo,
-        classId: this.allInfo.id,
+        classId: this.allInfo.reviewId,
         type: 2
       });
       if (res.status === 1) {

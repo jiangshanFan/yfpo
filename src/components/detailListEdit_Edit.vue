@@ -14,7 +14,17 @@
           element-loading-spinner="el-icon-loading"
           element-loading-background="rgba(0, 0, 0, 0.9)"
         >
-          <h1 class="tc mt20">{{allInfo.largeClass}}</h1>
+          <div style="width:100%; text-align:center;">
+            <!-- <el-button
+              type="primary"
+              size="mini"
+              style="float:left;"
+              @click.prevent="exportExcel"
+            >导出Excel</el-button> -->
+           
+            <el-button class="change" type="primary" size="mini" @click="changeInfo">更新提醒</el-button>
+            <h1 class="mt20" style="margin-right:100px;">{{allInfo.largeClass}}</h1>
+          </div>
 
           <el-tabs class="mt20" v-model="activeName" type="card" @tab-click="handleClick">
             <el-tab-pane
@@ -94,7 +104,9 @@ import Echarts from "../../node_modules/echarts/dist/echarts.min.js";
 import {
   getApproveInfoByMouldNo,
   updateApproveInfoByInnerUser,
-  updateApproveInfoByCustomer
+  updateApproveInfoByCustomer,
+  exportDesignInfoByMouldNo,
+  sendMailRemind
 } from "../axios/api.js";
 import column from "./tableColumn";
 import detailListEdit_Edit_detail from "./detailListEdit_Edit_detail";
@@ -127,6 +139,33 @@ export default {
     // this.saveInfo()
   },
   methods: {
+    // 更新提醒
+    async changeInfo(){
+      // console.log(this.allInfo.mouldNo+"+"+this.allInfo.largeClass)
+      let res = await sendMailRemind({
+        mouldNo:this.allInfo.mouldNo,
+        smallClassOrTableName:this.allInfo.largeClass
+      })
+      if(res.status===1){
+        this.$message({
+          type:'success',
+          message:'已成功发送邮件'
+        })
+      }else{
+        this.$message({
+          type:'warning',
+          message:'未能成功发送，请稍后尝试'
+        })
+      }
+    },
+    //导出表格
+    // async exportExcel() {
+    //   let params = {
+    //     mouldNo: this.$store.getters.mould_list.mouldNo,
+    //     type: 1
+    //   };
+    //   await exportDesignInfoByMouldNo(params);
+    // },
     //echaets
     async echart(ec, sc, lc) {
       let myEcharts = Echarts.init(document.getElementById("main"));
@@ -160,7 +199,7 @@ export default {
           },
           axisLine: {
             symbol: ["none", "arrow"],
-            symbolSize:[5,5]
+            symbolSize: [5, 5]
           }
         },
         yAxis: {
@@ -175,7 +214,7 @@ export default {
           },
           axisLine: {
             symbol: ["none", "arrow"],
-            symbolSize:[5,5]
+            symbolSize: [5, 5]
           }
         },
         series: [
@@ -529,6 +568,9 @@ export default {
 </script>
 
 <style lang="scss">
+.change{
+  float: right;
+}
 .el-tabs__item {
   height: 32px !important;
   line-height: 32px !important;

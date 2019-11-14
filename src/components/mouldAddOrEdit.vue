@@ -22,7 +22,7 @@
 
             <el-col :span="12">
               <el-form-item label="项目名称：" prop="projectName">
-                <el-input style="width:100%;" v-model="basicInfo.projectName" clearable maxlength="32"></el-input>
+                <el-input style="width:100%;" v-model="basicInfo.projectName" clearable maxlength="16"></el-input>
               </el-form-item>
             </el-col>
 
@@ -34,7 +34,7 @@
 
             <el-col :span="12">
               <el-form-item label="零件名称：" prop="partName">
-                <el-input style="width:100%;" v-model="basicInfo.partName" clearable></el-input>
+                <el-input style="width:100%;" maxlength="24" v-model="basicInfo.partName" clearable></el-input>
               </el-form-item>
             </el-col>
 
@@ -79,7 +79,7 @@
             </el-col>
           </el-row>
 
-          <el-col class="tc mt20" :span="24">
+          <el-col class="tc mt20" :span="24" v-if="this.user===1">
             <el-form-item label-width="0">
               <el-button type="primary" @click="submitForm('mouldAddOrEdit')">确定</el-button>
               <el-button type="plain" @click="resetForm('mouldAddOrEdit')">重置</el-button>
@@ -102,7 +102,7 @@ import { insertMould, updateMould, getUserListByRole} from '../axios/api.js'
     name: "ProjectAddOrEdit",
     async created() {
       this.basicInfo = Object.assign({},this.$store.getters.mould_list);
-
+      this.user=this.$store.getters.userLoginVO.role;
       let res1 = await getUserListByRole({role: 1});
       let res2 = await getUserListByRole({role: 2});
       if (res1.status === 1) {
@@ -120,6 +120,10 @@ import { insertMould, updateMould, getUserListByRole} from '../axios/api.js'
       }
     },
     methods: {
+      // 零件名称输入框
+      // partNameBlur(){
+      //   this.$len(32,this.basicInfo.partName)
+      // },
       submitForm(formName) {
         this.$refs[formName].validate(async (valid) => {
           if (valid) {
@@ -181,6 +185,8 @@ import { insertMould, updateMould, getUserListByRole} from '../axios/api.js'
 
         // choose api
         choose: 0,
+        // 判断登录是客户还是内部人员
+        user:{}
       }
     }
   }

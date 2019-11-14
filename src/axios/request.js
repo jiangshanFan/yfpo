@@ -59,15 +59,11 @@ $ajax.interceptors.response.use(
       const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8' }); //application/vnd.openxmlformats-officedocument.spreadsheetml.sheet这里表示xlsx类型
       let filename = '';
       if(response.config.method === 'get') {
-        if(response.config.url === '/api/createProject/export/downloadProjectList') {
-          filename = `项目列表(${vm.$format(new Date().getTime()).dates}).xlsx`;
+        if(response.config.url === '/api/project/downloadDesignInfoExcel') {
+          let ne = response.headers['content-disposition'].split('=')[1]
+         filename=decodeURI(ne)
         }
-        if(response.config.url === '/api/projectProgressManagement/export/downloadProjectProgress') {
-          filename = `项目进度表(${vm.$format(new Date().getTime()).dates}).xlsx`;
-        }
-        if(response.config.url === '/api/projectMember/export/downloadProjectMember') {
-          filename = `项目人员表(${vm.$format(new Date().getTime()).dates}).xlsx`;
-        }
+        // filename = `项目列表(${vm.$format(new Date().getTime()).dates}).xls`;
       }else{
 
       }
